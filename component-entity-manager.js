@@ -123,6 +123,7 @@ function EntityComponentManager() {
          */
         this.set = function(key, value) {
             state[key] = value;
+            return this;
         };
     };
 
@@ -138,6 +139,7 @@ function EntityComponentManager() {
      */
     this.addComponent = this.c = function(id, fn) {
         components[id] = fn;
+        return this;
     };
 
     /**
@@ -145,6 +147,7 @@ function EntityComponentManager() {
      */
     this.removeComponent = function(id) {
         delete components[id];
+        return this;
     };
 
     /**
