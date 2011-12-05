@@ -204,6 +204,14 @@ function EntityComponentManager() {
         return entitiesList;
     }
 
+    this.getComponentsList = function() {
+        var list = [];
+        for (c in components) {
+            list.push(c);
+        }
+        return list;
+    }
+
     // Add a default component
     this.c("obj", {});
 };
