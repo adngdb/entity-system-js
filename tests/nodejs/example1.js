@@ -1,9 +1,6 @@
 var cem = require('../../component-entity-manager'),
-    util = require('util');
-
-util.log(util.inspect(cem));
-// Instanciate the Game Engine
-var myGE = new cem.ComponentEntityManager();
+    // Instanciate the Game Engine
+    myGE = new cem.ComponentEntityManager();
 
 // Create a few components that can be used in-game
 var Hero = {
