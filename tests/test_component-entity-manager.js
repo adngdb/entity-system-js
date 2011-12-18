@@ -2,17 +2,17 @@
  * Test cases for ComponentEntityManager class.
  *
  * Requires node.js and it's nodeunit module.
- * To run those tests: nodeunit test_component-entity-manager.js
+ * To run those tests: nodeunit tests/test_component-entity-manager.js
  *
  * @author Adrian Gaudebert - adrian@gaudebert.fr
  */
 
-var ComponentEntityManager = require('../component-entity-manager'),
+var cem = require('../component-entity-manager'),
     PositionComponent = require('./components/position');
     UnitComponent = require('./components/unit');
 
 function prepareManager() {
-    var myGE = new ComponentEntityManager();
+    var myGE = new cem.ComponentEntityManager();
     myGE.c('Position', PositionComponent);
     myGE.c('Unit', UnitComponent);
     return myGE;
@@ -20,7 +20,7 @@ function prepareManager() {
 
 exports['add-component'] = function (test) {
     // One component case
-    var myGE = new ComponentEntityManager();
+    var myGE = new cem.ComponentEntityManager();
     myGE.c('Position', PositionComponent);
 
     test.deepEqual(myGE.getComponentsList(), ['obj', 'Position'], 'Bad list of components');
