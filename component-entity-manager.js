@@ -1,16 +1,23 @@
 /**
- * Class ComponentEntityManager
+ * ComponentEntityManager JavaScript Library v0.1
  *
- * Implement the Component / Entity system and provide tools to easily
- * create and manipulate Components and Entities.
+ * Copyright 2011, Adrian Gaudebert
+ * Licensed under the MIT license.
  *
- * Inspired by Crafty.js - http://craftyjs.com
- *
- * @author Adrian Gaudebert - adrian@gaudebert.fr
- * @constructor
  */
+
 (function(exports) {
-    exports.ComponentEntityManager = function() {
+
+    /**
+     * Class ComponentEntityManager
+     *
+     * Implement the Component / Entity model and provide tools to easily
+     * create and manipulate Components and Entities.
+     *
+     * @author Adrian Gaudebert - adrian@gaudebert.fr
+     * @constructor
+     */
+    function ComponentEntityManager() {
         var GUID = 0,
             entities = {},
             components = {};
@@ -216,4 +223,7 @@
         // Add a default component
         this.c("obj", {});
     }
+
+    exports.ComponentEntityManager = ComponentEntityManager;
+
 })(typeof exports === 'undefined' ? this['exports'] = {} : exports);
