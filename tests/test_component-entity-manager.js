@@ -94,3 +94,25 @@ exports['get-entity'] = function (test) {
 
     test.done();
 }
+
+exports['remove-entity'] = function (test) {
+    // Preparing
+    var myGE = prepareManager(),
+        pos = myGE.e('Position');
+
+    // Testing with one entity
+    test.deepEqual(myGE.get('Position'), [pos], 'Bad list of entities');
+    myGE.removeEntity(pos);
+    test.deepEqual(myGE.get('Position'), [], 'Bad list of entities');
+
+    // Testing with two entities
+    var pos1 = myGE.e('Position'),
+        pos2 = myGE.e('Position');
+    test.deepEqual(myGE.get('obj'), [pos1, pos2], 'Bad list of entities');
+    myGE.removeEntity(pos1);
+    test.deepEqual(myGE.get('obj'), [pos2], 'Bad list of entities');
+    myGE.removeEntity(pos2);
+    test.deepEqual(myGE.get('obj'), [], 'Bad list of entities');
+
+    test.done();
+}
