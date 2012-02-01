@@ -179,6 +179,16 @@
         };
 
         /**
+         * Remove an Entity from the internal memory.
+         *
+         * @entity the entity to remove.
+         */
+        this.removeEntity = this.r = function(entity) {
+            delete entities[entity.id];
+            return this;
+        };
+
+        /**
          * Get all entities that contain at least all the specified components.
          *
          * @param selector A list or a string of components.
