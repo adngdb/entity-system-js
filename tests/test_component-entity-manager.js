@@ -72,6 +72,15 @@ exports['create-entity'] = function (test) {
     test.done();
 }
 
+exports['create-entity-fail'] = function (test) {
+    // Test that creating an entity fails in appropriate situations
+    var myGE = prepareManager();
+
+    test.throws(function() { var unknown = myGE.e('UnknownComponent') }, 'Trying to use unknown component: "UnknownComponent"');
+
+    test.done();
+}
+
 exports['get-entity'] = function (test) {
     // Preparing
     var myGE = prepareManager(),
@@ -79,7 +88,6 @@ exports['get-entity'] = function (test) {
 
     // Testing with one entity
     test.deepEqual(myGE.get('Position'), [pos], 'Bad list of entities');
-    //~ test.deepEqual(myGE.get(pos.id), [pos], 'Bad entity'); // Not ready yet
 
     // Testing with two entities
     var unit = myGE.e('Unit');
@@ -90,6 +98,17 @@ exports['get-entity'] = function (test) {
     test.deepEqual(myGE.get('Position'), [pos, unit], 'Bad list of entities');
     test.deepEqual(myGE.get('obj Position'), [pos, unit], 'Bad list of entities');
     test.deepEqual(myGE.get('obj'), [pos, unit], 'Bad list of entities');
+
+    test.done();
+}
+
+exports['get-entity-by-id'] = function (test) {
+    // Preparing
+    var myGE = prepareManager(),
+        pos = myGE.e('Position'),
+        unit = myGE.e('Unit');
+
+    //~ test.deepEqual(myGE.get(pos.id), [pos], 'Bad entity'); // Not ready yet
     //~ test.deepEqual(myGE.get(unit.id), [unit], 'Bad entity'); // Not ready yet
 
     test.done();

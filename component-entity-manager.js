@@ -110,7 +110,10 @@
                 // selector is a list of components
                 for (c in selector) {
                     comp = components[selector[c]];
-                    if (this.type.indexOf(selector[c]) == -1 && comp) {
+                    if (!comp) {
+                        throw 'Trying to use unknown component: "' + selector[c] + '"';
+                    }
+                    else if (this.type.indexOf(selector[c]) == -1) {
                         this.type.push(selector[c]);
                         this.extend(comp);
                     }
