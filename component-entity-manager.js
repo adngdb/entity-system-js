@@ -32,6 +32,9 @@
             if (typeof(selector) == "string") {
                 selector = selector.split(" ");
             }
+            if (typeof selector !== 'object') {
+                return null;
+            }
             return selector;
         }
 
@@ -184,7 +187,7 @@
         /**
          * Remove an Entity from the internal memory.
          *
-         * @entity the entity to remove.
+         * @param entity The entity to remove.
          */
         this.removeEntity = this.r = function(entity) {
             delete entities[entity.id];
@@ -192,10 +195,12 @@
         };
 
         /**
-         * Get all entities that contain at least all the specified components.
+         * Return an entity from its ID or return all entities that contain at
+         * least all the specified components.
          *
-         * @param selector A list or a string of components.
-         * @return Array of Entity.
+         * @param selector An ID, or a list or a string of components.
+         * @return A single Entity object, an array of Entity objects, or
+         *         null if no result was found.
          */
         this.get = function(selector) {
             var i, j,
@@ -203,7 +208,20 @@
                 valid,
                 entitiesList = [];
 
+            // First verify if it's a valid id
+            if (typeof selector == 'string' || typeof selector == 'number') {
+                e = entities[selector];
+                if (typeof e !== 'undefined' && e !== null) {
+                    return e;
+                }
+            }
+
+            // Otherwise consider it as a list of components
             selector = prepareSelectors(selector);
+
+            if (selector === null || selector.length === 0) {
+                return null;
+            }
 
             for (i in entities) {
                 e = entities[i];
@@ -222,9 +240,18 @@
                 }
             }
 
+            if (entitiesList.length == 0) {
+                return null;
+            }
+
             return entitiesList;
         }
 
+        /**
+         * Return the list of all components available.
+         *
+         * @return An array of Component objects.
+         */
         this.getComponentsList = function() {
             var list = [];
             for (c in components) {

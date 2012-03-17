@@ -98,6 +98,7 @@ exports['get-entity'] = function (test) {
     test.deepEqual(myGE.get('Position'), [pos, unit], 'Bad list of entities');
     test.deepEqual(myGE.get('obj Position'), [pos, unit], 'Bad list of entities');
     test.deepEqual(myGE.get('obj'), [pos, unit], 'Bad list of entities');
+    test.equal(myGE.get('UnknownComponent'), null, 'Bad list of entities');
 
     test.done();
 }
@@ -108,8 +109,9 @@ exports['get-entity-by-id'] = function (test) {
         pos = myGE.e('Position'),
         unit = myGE.e('Unit');
 
-    //~ test.deepEqual(myGE.get(pos.id), [pos], 'Bad entity'); // Not ready yet
-    //~ test.deepEqual(myGE.get(unit.id), [unit], 'Bad entity'); // Not ready yet
+    test.deepEqual(myGE.get(pos.id), pos, 'Bad entity');
+    test.deepEqual(myGE.get(unit.id), unit, 'Bad entity');
+    test.equal(myGE.get(12345678), null, 'Return results when it should not');
 
     test.done();
 }
@@ -122,7 +124,7 @@ exports['remove-entity'] = function (test) {
     // Testing with one entity
     test.deepEqual(myGE.get('Position'), [pos], 'Bad list of entities');
     myGE.removeEntity(pos);
-    test.deepEqual(myGE.get('Position'), [], 'Bad list of entities');
+    test.deepEqual(myGE.get('Position'), null, 'Bad list of entities');
 
     // Testing with two entities
     var pos1 = myGE.e('Position'),
@@ -131,7 +133,7 @@ exports['remove-entity'] = function (test) {
     myGE.removeEntity(pos1);
     test.deepEqual(myGE.get('obj'), [pos2], 'Bad list of entities');
     myGE.removeEntity(pos2);
-    test.deepEqual(myGE.get('obj'), [], 'Bad list of entities');
+    test.deepEqual(myGE.get('obj'), null, 'Bad list of entities');
 
     test.done();
 }
