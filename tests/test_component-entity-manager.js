@@ -137,3 +137,25 @@ exports['remove-entity'] = function (test) {
 
     test.done();
 }
+
+exports['emit-event'] = function (test) {
+    var myGE = prepareManager(),
+        pos = myGE.e('Position')
+        lastEvent = null,
+        lastData = null;
+
+    myGE.emit = function(event, data) {
+        lastEvent = event;
+        lastData = data;
+    }
+
+    test.equal(lastEvent, null);
+    test.equal(lastData, null);
+
+    pos.x = 12345678;
+
+    test.equal(lastEvent, 'entityChanged');
+    test.deepEqual(lastData, { 'entity': pos });
+
+    test.done();
+}

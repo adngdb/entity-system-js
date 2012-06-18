@@ -20,7 +20,8 @@
     function ComponentEntityManager() {
         var GUID = 0,
             entities = {},
-            components = {};
+            components = {},
+            cemInstance = this;
 
         /**
          * Transform a string into a list of selectors.
@@ -85,6 +86,11 @@
                             });
                             // Setter
                             target.__defineSetter__(property, function(value) {
+                                // If the CEM instance has an emit function,
+                                // notify that an entity was changed.
+                                if (cemInstance.emit instanceof Function) {
+                                    cemInstance.emit('entityChanged', { 'entity': object });
+                                }
                                 object.set(property, value);
                             });
                         })(target, key);
