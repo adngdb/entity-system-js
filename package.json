@@ -1,0 +1,10 @@
+{
+    "name": "ComponentEntityManager",
+    "version": "0.0.1",
+    "dependencies": {
+        "amdefine": ">=0.0.4"
+    },
+    "devDependencies": {
+        "nodeunit": ">=0.7"
+    }
+}

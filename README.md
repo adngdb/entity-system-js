@@ -11,5 +11,5 @@ See the ``examples/`` folder for examples. Or read http://adrian.gaudebert.fr/bl
 Run the tests
 =============
 
-You will first need nodeunit, a module for node.js: ``npm intall nodeunit``.
-Then simply run the tests in the ``tests/`` folder: ``nodeunit tests``
+First you need to install the dependencies by running ``npm install``.
+Then simply run the tests with ``./runtests.sh`` or ``nodeunit tests``.
