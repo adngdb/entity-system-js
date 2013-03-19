@@ -1,12 +1,17 @@
 /**
  * ComponentEntityManager JavaScript Library v0.1
  *
- * Copyright 2011, Adrian Gaudebert
- * Licensed under the MIT license.
+ * @author Adrian Gaudebert - adrian@gaudebert.fr
+ * @license MIT license.
  *
  */
 
-(function(exports) {
+// for compatibility with node.js and require.js
+if (typeof define !== 'function') {
+    var define = require('amdefine')(module)
+}
+
+define(function () {
 
     /**
      * Class ComponentEntityManager
@@ -14,7 +19,6 @@
      * Implement the Component / Entity model and provide tools to easily
      * create and manipulate Components and Entities.
      *
-     * @author Adrian Gaudebert - adrian@gaudebert.fr
      * @constructor
      */
     function ComponentEntityManager() {
@@ -270,6 +274,8 @@
         this.c("obj", {});
     }
 
-    exports.ComponentEntityManager = ComponentEntityManager;
+    return {
+        'ComponentEntityManager': ComponentEntityManager
+    };
 
-})(typeof exports === 'undefined' ? this['exports'] = {} : exports);
+});
