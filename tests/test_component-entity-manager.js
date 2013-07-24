@@ -10,6 +10,7 @@
 var cem = require('../component-entity-manager'),
     PositionComponent = require('./components/position');
     UnitComponent = require('./components/unit');
+    GameComponent = require('./components/game');
 
 function prepareManager() {
     var myGE = new cem.ComponentEntityManager();
@@ -156,6 +157,45 @@ exports['emit-event'] = function (test) {
 
     test.equal(lastEvent, 'entityChanged');
     test.deepEqual(lastData, { 'entity': pos });
+
+    test.done();
+}
+
+exports['several-entities'] = function (test) {
+    var myGE = prepareManager();
+    myGE.c('Game', GameComponent);
+
+    var g1 = myGE.e('Game');
+    var g2 = myGE.e('Game');
+    var g3 = myGE.e('Game');
+    var u1 = myGE.e('Unit');
+    var u2 = myGE.e('Unit');
+
+    u1.attack = 42;
+    test.equal(u1.attack, 42);
+    test.equal(u2.attack, 10);
+
+    test.equal(g1.units.length, 0);
+    test.equal(g2.units.length, 0);
+    test.equal(g3.units.length, 0);
+
+    g1.units.push(u1);
+
+    test.equal(g1.units.length, 1);
+    test.equal(g2.units.length, 0);
+    test.equal(g3.units.length, 0);
+
+    g1.units.push(u2);
+
+    test.equal(g1.units.length, 2);
+    test.equal(g2.units.length, 0);
+    test.equal(g3.units.length, 0);
+
+    g3.units.push(u1);
+
+    test.equal(g1.units.length, 2);
+    test.equal(g2.units.length, 0);
+    test.equal(g3.units.length, 1);
 
     test.done();
 }

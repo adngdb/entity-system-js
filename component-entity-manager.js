@@ -14,6 +14,42 @@ if (typeof define !== 'function') {
 define(function () {
 
     /**
+     * Return a clone of an object.
+     * From http://stackoverflow.com/questions/728360
+     */
+     function clone(obj) {
+        // Handle the 3 simple types, and null or undefined
+        if (null == obj || "object" != typeof obj) return obj;
+
+        // Handle Date
+        if (obj instanceof Date) {
+            var copy = new Date();
+            copy.setTime(obj.getTime());
+            return copy;
+        }
+
+        // Handle Array
+        if (obj instanceof Array) {
+            var copy = [];
+            for (var i = 0, len = obj.length; i < len; i++) {
+                copy[i] = clone(obj[i]);
+            }
+            return copy;
+        }
+
+        // Handle Object
+        if (obj instanceof Object) {
+            var copy = {};
+            for (var attr in obj) {
+                if (obj.hasOwnProperty(attr)) copy[attr] = clone(obj[attr]);
+            }
+            return copy;
+        }
+
+        throw new Error("Unable to copy obj! Its type isn't supported.");
+    }
+
+    /**
      * Class ComponentEntityManager
      *
      * Implement the Component / Entity model and provide tools to easily
@@ -25,7 +61,7 @@ define(function () {
         var GUID = 0,
             entities = {},
             components = {},
-            cemInstance = this;
+            self = this;
 
         /**
          * Transform a string into a list of selectors.
@@ -82,7 +118,7 @@ define(function () {
                     // If not a function add the new property and
                     // add a getter and a setter for it
                     if (typeof obj[key] !== "function") {
-                        target.set(key, obj[key]);
+                        target.set(key, clone(obj[key]));
                         (function(object, property) {
                             // Getter
                             target.__defineGetter__(property, function() {
@@ -92,8 +128,8 @@ define(function () {
                             target.__defineSetter__(property, function(value) {
                                 // If the CEM instance has an emit function,
                                 // notify that an entity was changed.
-                                if (cemInstance.emit instanceof Function) {
-                                    cemInstance.emit('entityChanged', { 'entity': object });
+                                if (self.emit instanceof Function) {
+                                    self.emit('entityChanged', { 'entity': object });
                                 }
                                 object.set(property, value);
                             });
