@@ -82,6 +82,16 @@ exports['create-entity-fail'] = function (test) {
     test.done();
 }
 
+exports['create-entity-force-id'] = function (test) {
+    // Test that forcing the ID of a new entity works
+    var myGE = prepareManager();
+    var pos = myGE.e(42, 'Position');
+
+    test.equal(pos.id, 42);
+
+    test.done();
+}
+
 exports['get-entity'] = function (test) {
     // Preparing
     var myGE = prepareManager(),

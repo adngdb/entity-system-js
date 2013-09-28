@@ -217,13 +217,26 @@ define(function () {
          * @return Entity.
          */
         this.createEntity = this.e = function() {
-            var id = this.UID(),
-                ent;
+            var id;
+            var ent;
+            var args;
+
+            if (arguments.length > 0) {
+                if (typeof arguments[0] === 'number') {
+                    // We force the ID of this new entity.
+                    id = arguments[0];
+                    args = Array.prototype.slice.call(arguments, 0, 1);
+                }
+                else {
+                    id = this.UID();
+                    args = arguments;
+                }
+            }
 
             entities[id] = ent = new Entity(id);
 
-            if (arguments.length > 0) {
-                ent.requires.apply(ent, arguments);
+            if (args.length > 0) {
+                ent.requires.apply(ent, args);
             }
             ent.requires(["obj"]);
 
