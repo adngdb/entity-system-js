@@ -126,12 +126,12 @@ define(function () {
                             });
                             // Setter
                             target.__defineSetter__(property, function(value) {
+                                object.set(property, value);
                                 // If the CEM instance has an emit function,
                                 // notify that an entity was changed.
                                 if (self.emit instanceof Function) {
                                     self.emit('entityChanged', { 'entity': object });
                                 }
-                                object.set(property, value);
                             });
                         })(target, key);
                     }
