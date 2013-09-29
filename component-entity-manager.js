@@ -225,7 +225,7 @@ define(function () {
                 if (typeof arguments[0] === 'number') {
                     // We force the ID of this new entity.
                     id = arguments[0];
-                    args = Array.prototype.slice.call(arguments, 0, 1);
+                    args = Array.prototype.slice.call(arguments, 1);
                 }
                 else {
                     id = this.UID();

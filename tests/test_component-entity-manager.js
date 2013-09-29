@@ -88,6 +88,13 @@ exports['create-entity-force-id'] = function (test) {
     var pos = myGE.e(42, 'Position');
 
     test.equal(pos.id, 42);
+    test.equal(myGE.get('Position').length, 1);
+
+    var pos2 = myGE.e(43, ['Position', 'Unit']);
+
+    test.equal(pos2.id, 43);
+    test.equal(myGE.get('Position').length, 2);
+    test.equal(myGE.get('Unit').length, 1);
 
     test.done();
 }
