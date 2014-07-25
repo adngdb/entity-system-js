@@ -1,10 +1,14 @@
 {
-    "name": "ComponentEntityManager",
-    "version": "0.0.1",
+    "name": "EntityManager",
+    "version": "0.2.0",
     "dependencies": {
         "amdefine": ">=0.0.4"
     },
     "devDependencies": {
-        "nodeunit": ">=0.7"
+        "mocha": ">=1.8.2",
+        "chai": ">=1.9.1"
+    },
+    "scripts": {
+        "test": "make test"
     }
 }
