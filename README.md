@@ -1,15 +1,11 @@
-Component / Entity manager
-==========================
+# Entity Manager
 
-Easy and generic way to use the Component / Entity model for your JavaScript games.
+JavaScript implementation of the Entity System model as described by Adam Martin
+in his blog post series [Entity Systems are the future of MMOs](http://t-machine.org/index.php/2009/10/26/entity-systems-are-the-future-of-mmos-part-5/).
 
-How to use
-==========
+# Running the tests
 
-See the ``examples/`` folder for examples. Or read http://adrian.gaudebert.fr/blog/post/2011/12/18/component-entity-manager-for-javascript-games
+Install the dependencies with ``npm install``.
 
-Run the tests
-=============
-
-First you need to install the dependencies by running ``npm install``.
-Then simply run the tests with ``./runtests.sh`` or ``nodeunit tests``.
+Run the tests with ``make test`` or ``npm test``. Run the tests in your browser
+with ``make test-browser``.
