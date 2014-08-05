@@ -204,9 +204,9 @@ define(function () {
      *
      * @argument entityId: int - Unique identifier of the entity.
      * @argument componentId: string - Unique identifier of the component.
-     * @return None.
+     * @return Object - Component data of one entity.
      */
-    EntityManager.prototype.getEntityComponent = function (entityId, componentId) {
+    EntityManager.prototype.getEntityWithComponent = function (entityId, componentId) {
         if (!(componentId in this.components)) {
             throw new Error('Trying to use unknown component: ' + componentId);
         }
@@ -219,6 +219,24 @@ define(function () {
         }
 
         return this.entityComponentData[componentId][entityId];
+    };
+
+    /**
+     * Return a list of objects containing the data of all of a given component.
+     *
+     * @argument componentId: string - Unique identifier of the component.
+     * @return Array - List of component data for all one component.
+     */
+    EntityManager.prototype.getEntitiesWithComponent = function (componentId) {
+        if (!(componentId in this.components)) {
+            throw new Error('Trying to use unknown component: ' + componentId);
+        }
+
+        if (!this.entityComponentData.hasOwnProperty(componentId)) {
+            throw new Error('No data for component ' + componentId);
+        }
+
+        return this.entityComponentData[componentId];
     };
 
     /**
