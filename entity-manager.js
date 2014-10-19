@@ -190,6 +190,9 @@ define(function () {
                         })(property);
                     }
                 }
+
+                // Store the entity's ID so it's easier to find other components for that entity.
+                newCompState.__id = entityId;
             })(newCompState);
 
             this.entityComponentData[comp][entityId] = newCompState;

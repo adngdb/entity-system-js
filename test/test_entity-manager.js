@@ -105,6 +105,21 @@ define(function (require) {
         });
 
         describe('#addComponentsToEntity()', function () {
+            it('adds the entity\'s ID to the state', function () {
+                var manager = prepareManager();
+                var entity = manager.createEntity(['Position']);
+
+                manager.addComponentsToEntity(entity, ['Unit']);
+
+                var dataPos = manager.getEntityWithComponent(entity, 'Position');
+                expect(dataPos.__id).to.exist;
+                expect(dataPos.__id).to.equal(entity);
+
+                var dataPos = manager.getEntityWithComponent(entity, 'Unit');
+                expect(dataPos.__id).to.exist;
+                expect(dataPos.__id).to.equal(entity);
+            });
+
             it('can add components to an existing entity', function () {
                 var manager = prepareManager();
                 var entity = manager.createEntity(['Position']);
