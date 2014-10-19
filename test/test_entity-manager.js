@@ -294,24 +294,23 @@ define(function (require) {
 
             it('throws an error when the component does not exist', function () {
                 var manager = prepareManager();
-                var entity = manager.createEntity(['Position', 'Unit']);
+                manager.createEntity(['Position', 'Unit']);
 
                 var fn = function () {
-                    manager.getEntityWithComponent(entity, 'UnknownComponent');
+                    manager.getEntitiesWithComponent('UnknownComponent');
                 };
 
                 expect(fn).to.throw('Trying to use unknown component: UnknownComponent');
             });
 
-            it('throws an error when the component has no data', function () {
+            it('returns an empty list when the component has no data', function () {
                 var manager = prepareManager();
-                var entity = manager.createEntity(['Position']);
+                manager.createEntity(['Position']);
 
-                var fn = function () {
-                    manager.getEntityWithComponent(entity, 'Unit');
-                };
+                var components = manager.getEntitiesWithComponent('Unit');
 
-                expect(fn).to.throw('No data for component Unit');
+                expect(components).to.be.a('array');
+                expect(components).to.have.length(0);
             });
         });
 

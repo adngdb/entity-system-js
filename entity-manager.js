@@ -236,7 +236,7 @@ define(function () {
         }
 
         if (!this.entityComponentData.hasOwnProperty(componentId)) {
-            throw new Error('No data for component ' + componentId);
+            return [];
         }
 
         return this.entityComponentData[componentId];
