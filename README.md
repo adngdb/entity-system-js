@@ -5,7 +5,7 @@ in his blog post series [Entity Systems are the future of MMOs](http://t-machine
 
 # Documentation
 
-The documentation is currently in the code. All methods are well documented and parameters are described. If you are familiar with Entity Systems, it shouldn't be too hard to understand.
+The documentation is available on [Read the docs](http://entity-system-js.rtfd.org/). All methods are well documented and parameters are described. If you are familiar with Entity Systems, it shouldn't be too hard to understand.
 
 Here is a quick example:
 
@@ -42,4 +42,4 @@ There are examples in the [examples](https://github.com/AdrianGaudebert/componen
 Install the dependencies with ``npm install``.
 
 Run the tests with ``make test`` or ``npm test``. Run the tests in your browser
-with ``make test-browser``.
+with ``make test-browser``. Build the API documentation with ``npm run build_doc``.
