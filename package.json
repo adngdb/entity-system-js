@@ -6,9 +6,11 @@
     },
     "devDependencies": {
         "mocha": ">=1.8.2",
-        "chai": ">=1.9.1"
+        "chai": ">=1.9.1",
+        "markdox": ">=0.1.7"
     },
     "scripts": {
-        "test": "make test"
+        "test": "make test",
+        "build_doc": "markdox *.js --output=docs/api.md"
     }
 }

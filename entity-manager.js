@@ -1,4 +1,4 @@
-/**
+/*!
  * EntityManager JavaScript Library v0.2.0
  *
  * A JavaScript implementation of the Entity System model as described by
@@ -16,11 +16,11 @@ if (typeof define !== 'function') {
 
 define(function () {
 
-    /**
+    /*!
      * Return a clone of an object.
      * From http://stackoverflow.com/questions/728360
      */
-     function clone(obj) {
+    function clone(obj) {
         // Handle the 3 simple types, and null or undefined
         if (null == obj || "object" != typeof obj) return obj;
 
@@ -48,17 +48,13 @@ define(function () {
             }
             return copy;
         }
-
-        throw new Error("Unable to copy obj! Its type isn't supported.");
     }
 
     /**
-     * Class EntityManager
+     * @class EntityManager
      *
      * Implement the Entity System model and provide tools to easily
      * create and manipulate Components and Entities.
-     *
-     * @constructor
      */
     var EntityManager = function () {
         // A list of entity IDs, each being a simple integer.
@@ -71,7 +67,7 @@ define(function () {
         //    newly instanciated component
         this.components = {};
 
-        /**
+        /*!
          * A relational-like list of entity states. There is one line for
          * each entity - component association.
          *
@@ -101,9 +97,9 @@ define(function () {
     /**
      * Add a component to the list of known components.
      *
-     * @argument id: string - Unique identifier of the component.
-     * @argument component: object - Object containing the metadata and data of the component.
-     * @return None.
+     * @param {string} id - Unique identifier of the component.
+     * @param {object} component - Object containing the metadata and data of the component.
+     * @return {object} - this
      */
     EntityManager.prototype.addComponent = function (id, component) {
         this.components[id] = component;
@@ -113,8 +109,8 @@ define(function () {
     /**
      * Remove a component from the list of known components.
      *
-     * @argument id: string - Unique identifier of the component.
-     * @return None.
+     * @param {string} id - Unique identifier of the component.
+     * @return {object} - this
      */
     EntityManager.prototype.removeComponent = function (id) {
         delete this.components[id];
@@ -125,8 +121,8 @@ define(function () {
      * Create a new entity in the system by creating a new instance of each of
      * its components.
      *
-     * @argument componentIds: list of strings - List of identifiers of the components that compose the new entity.
-     * @return int - Unique identifier of the new entity.
+     * @param {array} componentIds - List of identifiers of the components that compose the new entity.
+     * @return {int} - Unique identifier of the new entity.
      */
     EntityManager.prototype.createEntity = function (componentIds) {
         var id = this.getUid();
@@ -139,8 +135,8 @@ define(function () {
      * Create a new entity in the system by creating a new instance of each of
      * its components.
      *
-     * @argument componentIds: list of strings - List of identifiers of the components that compose the new entity.
-     * @return None.
+     * @param {array} componentIds - List of identifiers of the components that compose the new entity.
+     * @return {object} - this
      */
     EntityManager.prototype.addComponentsToEntity = function (entityId, componentIds) {
         var i;
@@ -205,9 +201,9 @@ define(function () {
      * Return a reference to an object that contains the data of an
      * instanciated component of an entity.
      *
-     * @argument entityId: int - Unique identifier of the entity.
-     * @argument componentId: string - Unique identifier of the component.
-     * @return Object - Component data of one entity.
+     * @param {int} entityId - Unique identifier of the entity.
+     * @param {string} componentId - Unique identifier of the component.
+     * @return {object} - Component data of one entity.
      */
     EntityManager.prototype.getEntityWithComponent = function (entityId, componentId) {
         if (!(componentId in this.components)) {
@@ -227,8 +223,8 @@ define(function () {
     /**
      * Return a list of objects containing the data of all of a given component.
      *
-     * @argument componentId: string - Unique identifier of the component.
-     * @return Array - List of component data for all one component.
+     * @param {string} componentId - Unique identifier of the component.
+     * @return {array} - List of component data for one component.
      */
     EntityManager.prototype.getEntitiesWithComponent = function (componentId) {
         if (!(componentId in this.components)) {
@@ -245,8 +241,8 @@ define(function () {
     /**
      * Remove an entity and its instanciated components from the system.
      *
-     * @argument id: int - Unique identifier of the entity.
-     * @return None.
+     * @param {int} id - Unique identifier of the entity.
+     * @return {object} - this
      */
     EntityManager.prototype.removeEntity = function (id) {
         // Remove all data for this entity.
@@ -267,7 +263,7 @@ define(function () {
     /**
      * Get the list of components this instance knows.
      *
-     * @return Array - List of names of components.
+     * @return {array} - List of names of components.
      */
     EntityManager.prototype.getComponentsList = function () {
         return Object.keys(this.components);
@@ -276,7 +272,7 @@ define(function () {
     /**
      * Return an identifier unique to this system.
      *
-     * @return int - Unique identifier.
+     * @return {int} - Unique identifier.
      */
     EntityManager.prototype.getUid = function () {
         return this.uid++;
