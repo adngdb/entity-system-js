@@ -1,3 +1,17 @@
+/**
+ * A game of Concentration. Each tile exists in double. Click on tiles to turn
+ * them up, and find all the couples.
+ *
+ * Code initially taken from
+ * http://www.emanueleferonato.com/2014/02/26/complete-html5-concentration-game-made-with-pixi-js/
+ * but then largely rewritten as an Entity System game.
+ *
+ * Using:
+ *  - Entity System for JavaScript - https://github.com/AdrianGaudebert/entity-system-js
+ *  - Pixi.js - http://www.pixijs.com/
+ *  - require.js - http://requirejs.org/
+ */
+
 require.config({
   paths: {
     'entity-manager': ['../../../entity-manager'],
@@ -14,28 +28,126 @@ function (EntityManager,    ProcessorManager,    PIXI) {
     document.getElementById('stage').appendChild(renderer.view);
 
     /*--- COMPONENTS ---*/
+
+    /**
+     * The basic Card component, that each tile on the board has. Controls the
+     * position of the card and its tile number.
+     */
     var Card = {
         name: 'Card',
         state: {
             x: 0,
             y: 0,
             tile: 0,
-            visible: false,
-            found: false,
-            _sprite: null,
-            _clicked: false,
+        }
+    };
+
+    /**
+     * A marker for cards that are face down (tile hidden) in the game.
+     */
+    var CardFaceDown = {
+        name: 'CardFaceDown',
+        state: {
+        }
+    };
+
+    /**
+     * A marker for cards that are face up (tile visible) in the game.
+     */
+    var CardFaceUp = {
+        name: 'CardFaceUp',
+        state: {
+        }
+    };
+
+    /**
+     * A marker for cards that have been clicked by the player.
+     */
+    var CardClicked = {
+        name: 'CardClicked',
+        state: {
+        }
+    };
+
+    /**
+     * A marker for cards that have been found by the player and should be
+     * removed from the game.
+     */
+    var CardFound = {
+        name: 'CardFound',
+        state: {
         }
     };
 
     /*--- PROCESSORS ---*/
+
+    /**
+     * A processor that takes care of all things related to displaying the game.
+     */
     var RenderingProcessor = function (manager) {
         this.manager = manager;
+
+        this.container = new PIXI.DisplayObjectContainer();
+        stage.addChild(this.container);
+
+        // An associative array for entities' sprites.
+        // entity id -> sprite
+        this.sprites = {};
+
+        this.initTiles();
+    };
+
+    RenderingProcessor.prototype.initTiles = function () {
+        var cards = this.manager.getEntitiesWithComponent('Card');
+        for (var entityId in cards) {
+            this.createCardTile(entityId, cards[entityId]);
+        }
+    };
+
+    RenderingProcessor.prototype.createCardTile = function (cardId, cardData) {
+        var sprite = PIXI.Sprite.fromFrame(cardData.tile);
+
+        sprite.buttonMode = true;
+        sprite.interactive = true;
+        sprite.position.x = 7 + cardData.x * 80;
+        sprite.position.y = 7 + cardData.y * 80;
+
+        (function (cardId, sprite, self) {
+            sprite.click = function () {
+                self.manager.addComponentsToEntity(cardId, ['CardClicked']);
+            };
+        })(cardId, sprite, this);
+
+        this.container.addChild(sprite);
+
+        this.sprites[cardId] = sprite;
     };
 
     RenderingProcessor.prototype.update = function () {
+        var found = this.manager.getEntitiesWithComponent('CardFound');
+        for (var entityId in found) {
+            this.container.removeChild(this.sprites[entityId]);
+            this.manager.removeEntity(entityId);
+        }
+
+        var faceDown = this.manager.getEntitiesWithComponent('CardFaceDown');
+        for (var entityId in faceDown) {
+            this.sprites[entityId].tint = 0x000000;
+            this.sprites[entityId].alpha = 0.5;
+        }
+
+        var faceUp = this.manager.getEntitiesWithComponent('CardFaceUp');
+        for (var entityId in faceUp) {
+            this.sprites[entityId].tint = 0xffffff;
+            this.sprites[entityId].alpha = 1.0;
+        }
+
         renderer.render(stage);
     };
 
+    /**
+     * A processor that manages the cards and their change of state.
+     */
     var CardProcessor = function (manager) {
         this.manager = manager;
 
@@ -49,9 +161,6 @@ function (EntityManager,    ProcessorManager,    PIXI) {
     };
 
     CardProcessor.prototype.init = function () {
-        this.container = new PIXI.DisplayObjectContainer();
-        stage.addChild(this.container);
-
         // Choose a random set of tiles.
         var chosenTiles = [];
         while (chosenTiles.length < this.numberOfTiles) {
@@ -71,97 +180,94 @@ function (EntityManager,    ProcessorManager,    PIXI) {
         }
 
         for (var i = chosenTiles.length - 1; i >= 0; i--) {
-            var cardId = this.manager.createEntity(['Card']);
+            var cardId = this.manager.createEntity(['Card', 'CardFaceDown']);
             var card = this.manager.getEntityWithComponent(cardId, 'Card');
             card.tile = chosenTiles[i];
             card.x = i % this.width;
             card.y = Math.floor(i / this.width);
-
-            card._sprite = PIXI.Sprite.fromFrame(card.tile);
-            card._sprite.buttonMode = true;
-            card._sprite.interactive  =  true;
-            card._sprite.position.x = 7 + card.x * 80;
-            card._sprite.position.y = 7 + card.y * 80;
-
-            (function (card) {
-                card._sprite.click = function () {
-                    card._clicked = true;
-                };
-            })(card);
-
-            this.container.addChild(card._sprite);
         }
     };
 
     CardProcessor.prototype.update = function () {
-        var cards = this.manager.getEntitiesWithComponent('Card');
+        var manager = this.manager;
+        var card;
 
-        if (this.timerStart) {
-            var now = +new Date();
-            if (now - this.timerStart >= 1000) {
-                if (this.selected1.tile === this.selected2.tile) {
-                    // It's a match!
-                    this.selected1.found = true;
-                    this.selected2.found = true;
-                }
-                else {
-                    this.selected1.visible = false;
-                    this.selected2.visible = false;
-                }
+        // Get all the cards currently face up, used in tests because we never
+        // want to have more than 2 cards face up.
+        var faceUp = manager.getEntitiesWithComponent('CardFaceUp');
+        var faceUpIds = Object.keys(faceUp);
 
-                this.selected1 = null;
-                this.selected2 = null;
-                this.timerStart = null;
-            }
-        }
+        // Go through clicked cards and turn them face up if possible.
+        var clicked = manager.getEntitiesWithComponent('CardClicked');
+        for (card in clicked) {
+            if (Object.keys(faceUp).length < 2 && manager.entityHasComponent(card, 'CardFaceDown')) {
+                manager.removeComponentsFromEntity(card, ['CardFaceDown']);
+                manager.addComponentsToEntity(card, ['CardFaceUp']);
 
-        for (var i in cards) {
-            var card = cards[i];
-
-            if (!cards.hasOwnProperty(i) || !card._sprite) {
-                continue;
-            }
-
-            if (card._clicked && !card.visible && !card.found) {
-                if (!this.selected1) {
-                    this.selected1 = card;
-                    card.visible = true;
-                }
-                else if (!this.selected2) {
-                    this.selected2 = card;
-                    card.visible = true;
-
-                    // Set a timer to hide or remove those cards.
+                if (Object.keys(faceUp).length === 2) {
                     this.timerStart = +new Date();
                 }
-
-                card._clicked = false;
             }
 
-            if (!card.visible) {
-                card._sprite.tint = 0x000000;
-                card._sprite.alpha = 0.5;
-            }
-            else {
-                card._sprite.tint = 0xffffff;
-                card._sprite.alpha = 1.0;
-            }
+            manager.removeComponentsFromEntity(card, ['CardClicked']);
+        }
 
-            if (card.found) {
-                this.container.removeChild(card._sprite);
-                card._sprite = null;
+        if (faceUpIds.length > 2) {
+            throw 'You did your job poorly, developer. Now go and fix your code.';
+        }
+
+        // When 2 cards are face up and we have waited long enough, if those
+        // cards have the same tile, mark them as found, otherwise turn them
+        // face down.
+        if (faceUpIds.length == 2 && this.timerStart) {
+            var now = +new Date();
+            if (now - this.timerStart >= 1000) {
+                var card1 = manager.getEntityWithComponent(faceUpIds[0], 'Card');
+                var card2 = manager.getEntityWithComponent(faceUpIds[1], 'Card');
+
+                if (card1.tile === card2.tile) {
+                    // Found a pair.
+                    manager.addComponentsToEntity(faceUpIds[0], ['CardFound']);
+                    manager.addComponentsToEntity(faceUpIds[1], ['CardFound']);
+                }
+                else {
+                    // Not a pair.
+                    manager.removeComponentsFromEntity(faceUpIds[0], ['CardFaceUp']);
+                    manager.removeComponentsFromEntity(faceUpIds[1], ['CardFaceUp']);
+                    manager.addComponentsToEntity(faceUpIds[0], ['CardFaceDown']);
+                    manager.addComponentsToEntity(faceUpIds[1], ['CardFaceDown']);
+                }
+
+                this.timerStart = null;
             }
         }
     };
 
     function start() {
+        // Create an Entity System manager object.
         var manager = new EntityManager();
-        manager.addComponent(Card.name, Card);
 
+        // Add all components to the system.
+        var components = [
+            Card,
+            CardFaceUp,
+            CardFaceDown,
+            CardClicked,
+            CardFound,
+        ];
+        for (var i = components.length - 1; i >= 0; i--) {
+            manager.addComponent(components[i].name, components[i]);
+        }
+
+        // Add all processors in the system. Note that because of the logic
+        // in our processors' constructors, order here matters.
+        // CardProcessor creates all the card entities, and RenderingProcessor
+        // then creates all the sprites to go with them.
         var processors = new ProcessorManager();
-        processors.addProcessor(new RenderingProcessor(manager));
         processors.addProcessor(new CardProcessor(manager));
+        processors.addProcessor(new RenderingProcessor(manager));
 
+        // Start the main loop of the game.
         requestAnimFrame(animate);
         function animate() {
             requestAnimFrame(animate);
