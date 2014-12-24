@@ -44,14 +44,40 @@ its components.
 
 * **int** - Unique identifier of the new entity.
 
-## addComponentsToEntity(componentIds)
+## removeEntity(id)
 
-Create a new entity in the system by creating a new instance of each of
-its components.
+Remove an entity and its instanciated components from the system.
 
 ### Params:
 
-* **array** *componentIds* - List of identifiers of the components that compose the new entity.
+* **int** *id* - Unique identifier of the entity.
+
+### Return:
+
+* **object** - this
+
+## addComponentsToEntity(entityId, componentIds)
+
+Create a new instance of each listed component and associate them
+with the entity.
+
+### Params:
+
+* **int** *entityId* - Unique identifier of the entity.
+* **array** *componentIds* - List of identifiers of the components to add to the entity.
+
+### Return:
+
+* **object** - this
+
+## removeComponentsFromEntity(entityId, componentIds)
+
+De-associate a list of components from the entity.
+
+### Params:
+
+* **int** *entityId* - Unique identifier of the entity.
+* **array** *componentIds* - List of identifiers of the components to remove from the entity.
 
 ### Return:
 
@@ -83,17 +109,18 @@ Return a list of objects containing the data of all of a given component.
 
 * **array** - List of component data for one component.
 
-## removeEntity(id)
+## entityHasComponent(entityId, componentId)
 
-Remove an entity and its instanciated components from the system.
+Return true if the entity has the component.
 
 ### Params:
 
-* **int** *id* - Unique identifier of the entity.
+* **int** *entityId* - Unique identifier of the entity.
+* **string** *componentId* - Unique identifier of the component.
 
 ### Return:
 
-* **object** - this
+* **boolean** - True if the entity has the component.
 
 ## getComponentsList()
 

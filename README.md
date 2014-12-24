@@ -37,9 +37,24 @@ There are examples in the [examples](https://github.com/AdrianGaudebert/componen
 * [Concentration](https://github.com/AdrianGaudebert/component-entity/tree/master/examples/concentration)
 * more to come...
 
-# Running the tests
+# For developers
 
 Install the dependencies with ``npm install``.
 
-Run the tests with ``make test`` or ``npm test``. Run the tests in your browser
-with ``make test-browser``. Build the API documentation with ``npm run build_doc``.
+## Running tests
+
+```bash
+$ npm test
+```
+
+To run the tests in your browser:
+
+```bash
+$ make test-browser
+```
+
+## Building the documentation
+
+```bash
+$ npm run build_doc
+```
