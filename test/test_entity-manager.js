@@ -104,6 +104,56 @@ define(function (require) {
             });
         });
 
+        describe('#removeEntity()', function () {
+            it('can remove an existing entity', function () {
+                var manager = prepareManager();
+                var entity = manager.createEntity(['Position', 'Unit']);
+
+                // Verify all data was correctly created.
+                var data = manager.getEntityWithComponent(entity, 'Position');
+                expect(data).to.be.instanceOf(Object);
+
+                data = manager.getEntityWithComponent(entity, 'Unit');
+                expect(data).to.be.instanceOf(Object);
+
+                manager.removeEntity(entity);
+
+                // Verify all data does not exist anymore.
+                expect(function () {
+                    manager.getEntityWithComponent(entity, 'Position');
+                }).to.throw('No data for component Position and entity ' + entity);
+
+                expect(function () {
+                    manager.getEntityWithComponent(entity, 'Unit');
+                }).to.throw('No data for component Unit and entity ' + entity);
+
+                expect(manager.entities[entity]).to.be.undefined;
+            });
+
+            it('can remove several existing entities', function () {
+                var manager = prepareManager();
+                var entity1 = manager.createEntity(['Position']);
+                var entity2 = manager.createEntity(['Position']);
+                var entity3 = manager.createEntity(['Position']);
+
+                manager.removeEntity(entity1);
+                manager.removeEntity(entity3);
+
+                var fn1 = function () {
+                    manager.getEntityWithComponent(entity1, 'Position');
+                }
+
+                var fn3 = function () {
+                    manager.getEntityWithComponent(entity3, 'Position');
+                }
+
+                expect(fn1).to.throw('No data for component Position and entity ' + entity1);
+                expect(fn3).to.throw('No data for component Position and entity ' + entity3);
+
+                expect(manager.getEntityWithComponent(entity2, 'Position')).to.be.ok;
+            });
+        });
+
         describe('#addComponentsToEntity()', function () {
             it('adds the entity\'s ID to the state', function () {
                 var manager = prepareManager();
@@ -212,6 +262,41 @@ define(function (require) {
             });
         });
 
+        describe('#removeComponentsFromEntity()', function () {
+            it('removes one component from an existing entity', function () {
+                var manager = prepareManager();
+                var entity = manager.createEntity(['Position', 'Unit']);
+
+                manager.removeComponentsFromEntity(entity, ['Unit']);
+
+                // Verify the 'Position' component is still here.
+                var dataPos = manager.getEntityWithComponent(entity, 'Position');
+                expect(dataPos).to.be.instanceOf(Object);
+
+                // Verify the 'Unit' component has been removed.
+                expect(function () {
+                    manager.getEntityWithComponent(entity, 'Unit');
+                }).to.throw('No data for component Unit and entity ' + entity);
+            });
+
+            it('removes several components from an existing entity', function () {
+                var manager = prepareManager();
+                var entity = manager.createEntity(['Position', 'Unit']);
+
+                manager.removeComponentsFromEntity(entity, ['Position', 'Unit']);
+
+                // Verify the 'Position' component has been removed.
+                expect(function () {
+                    manager.getEntityWithComponent(entity, 'Position');
+                }).to.throw('No data for component Position and entity ' + entity);
+
+                // Verify the 'Unit' component has been removed.
+                expect(function () {
+                    manager.getEntityWithComponent(entity, 'Unit');
+                }).to.throw('No data for component Unit and entity ' + entity);
+            });
+        });
+
         describe('#getEntityWithComponent()', function () {
             it('returns the correct data object', function () {
                 var manager = prepareManager();
@@ -314,41 +399,13 @@ define(function (require) {
             });
         });
 
-        describe('#removeEntity()', function () {
-            it('can remove an existing entity', function () {
+        describe('#entityHasComponent()', function () {
+            it('returns true when an entity has a component', function () {
                 var manager = prepareManager();
                 var entity = manager.createEntity(['Position']);
 
-                manager.removeEntity(entity);
-
-                var fn = function () {
-                    manager.getEntityWithComponent(entity, 'Position');
-                }
-
-                expect(fn).to.throw('No data for component Position and entity ' + entity);
-            });
-
-            it('can remove several existing entities', function () {
-                var manager = prepareManager();
-                var entity1 = manager.createEntity(['Position']);
-                var entity2 = manager.createEntity(['Position']);
-                var entity3 = manager.createEntity(['Position']);
-
-                manager.removeEntity(entity1);
-                manager.removeEntity(entity3);
-
-                var fn1 = function () {
-                    manager.getEntityWithComponent(entity1, 'Position');
-                }
-
-                var fn3 = function () {
-                    manager.getEntityWithComponent(entity3, 'Position');
-                }
-
-                expect(fn1).to.throw('No data for component Position and entity ' + entity1);
-                expect(fn3).to.throw('No data for component Position and entity ' + entity3);
-
-                expect(manager.getEntityWithComponent(entity2, 'Position')).to.be.ok;
+                expect(manager.entityHasComponent(entity, 'Position')).to.be.true;
+                expect(manager.entityHasComponent(entity, 'Unit')).to.be.false;
             });
         });
     });

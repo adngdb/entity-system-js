@@ -114,6 +114,7 @@ define(function () {
      */
     EntityManager.prototype.removeComponent = function (id) {
         delete this.components[id];
+        delete this.entityComponentData[id];
         return this;
     };
 
@@ -132,10 +133,33 @@ define(function () {
     };
 
     /**
-     * Create a new entity in the system by creating a new instance of each of
-     * its components.
+     * Remove an entity and its instanciated components from the system.
      *
-     * @param {array} componentIds - List of identifiers of the components that compose the new entity.
+     * @param {int} id - Unique identifier of the entity.
+     * @return {object} - this
+     */
+    EntityManager.prototype.removeEntity = function (id) {
+        // Remove all data for this entity.
+        for (var comp in this.entityComponentData) {
+            if (this.entityComponentData.hasOwnProperty(comp)) {
+                if (this.entityComponentData[comp][id]) {
+                    delete this.entityComponentData[comp][id];
+                }
+            }
+        }
+
+        // Return the entity from the list of known entities.
+        this.entities.splice(this.entities.indexOf(id), 1);
+
+        return this;
+    };
+
+    /**
+     * Create a new instance of each listed component and associate them
+     * with the entity.
+     *
+     * @param {int} entityId - Unique identifier of the entity.
+     * @param {array} componentIds - List of identifiers of the components to add to the entity.
      * @return {object} - this
      */
     EntityManager.prototype.addComponentsToEntity = function (entityId, componentIds) {
@@ -198,6 +222,43 @@ define(function () {
     };
 
     /**
+     * De-associate a list of components from the entity.
+     *
+     * @param {int} entityId - Unique identifier of the entity.
+     * @param {array} componentIds - List of identifiers of the components to remove from the entity.
+     * @return {object} - this
+     */
+    EntityManager.prototype.removeComponentsFromEntity = function (entityId, componentIds) {
+        var i;
+        var comp;
+
+        // First verify that all the components exist, and throw an error
+        // if any is unknown.
+        for (i = componentIds.length - 1; i >= 0; i--) {
+            comp = componentIds[i];
+
+            if (!this.components[comp]) {
+                throw new Error('Trying to use unknown component: ' + comp);
+            }
+        }
+
+        // Now we know that this request is correct, let's create the new
+        // entity and instanciate the component's states.
+        for (i = componentIds.length - 1; i >= 0; i--) {
+            comp = componentIds[i];
+
+            if (this.entityComponentData[comp]) {
+                if (this.entityComponentData[comp][entityId]) {
+                    delete this.entityComponentData[comp][entityId];
+                }
+            }
+        }
+
+
+        return this;
+    };
+
+    /**
      * Return a reference to an object that contains the data of an
      * instanciated component of an entity.
      *
@@ -239,25 +300,21 @@ define(function () {
     };
 
     /**
-     * Remove an entity and its instanciated components from the system.
+     * Return true if the entity has the component.
      *
-     * @param {int} id - Unique identifier of the entity.
-     * @return {object} - this
+     * @param {int} entityId - Unique identifier of the entity.
+     * @param {string} componentId - Unique identifier of the component.
+     * @return {boolean} - True if the entity has the component.
      */
-    EntityManager.prototype.removeEntity = function (id) {
-        // Remove all data for this entity.
-        for (var comp in this.entityComponentData) {
-            if (this.entityComponentData.hasOwnProperty(comp)) {
-                if (this.entityComponentData[comp][id]) {
-                    delete this.entityComponentData[comp][id];
-                }
-            }
+    EntityManager.prototype.entityHasComponent = function (entityId, componentId) {
+        if (!(componentId in this.components)) {
+            throw new Error('Trying to use unknown component: ' + componentId);
         }
 
-        // Return the entity from the list of known entities.
-        this.entities.splice(this.entities.indexOf(id), 1);
-
-        return this;
+        return (
+            this.entityComponentData.hasOwnProperty(componentId) &&
+            this.entityComponentData[componentId].hasOwnProperty(entityId)
+        );
     };
 
     /**
