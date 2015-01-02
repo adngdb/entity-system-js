@@ -66,7 +66,7 @@ define(function (require) {
                 var manager = prepareManager();
 
                 var entity = manager.createEntity(['Position']);
-                var data = manager.getEntityWithComponent(entity, 'Position');
+                var data = manager.getComponentDataForEntity('Position', entity);
 
                 // Testing default values
                 expect(data.x).to.equal(0);
@@ -79,8 +79,8 @@ define(function (require) {
                 var manager = prepareManager();
 
                 var entity = manager.createEntity(['Position', 'Unit']);
-                var dataPos = manager.getEntityWithComponent(entity, 'Position');
-                var dataUnit = manager.getEntityWithComponent(entity, 'Unit');
+                var dataPos = manager.getComponentDataForEntity('Position', entity);
+                var dataUnit = manager.getComponentDataForEntity('Unit', entity);
 
                 expect(dataPos.x).to.equal(0);
                 expect(dataPos.y).to.equal(0);
@@ -110,21 +110,21 @@ define(function (require) {
                 var entity = manager.createEntity(['Position', 'Unit']);
 
                 // Verify all data was correctly created.
-                var data = manager.getEntityWithComponent(entity, 'Position');
+                var data = manager.getComponentDataForEntity('Position', entity);
                 expect(data).to.be.instanceOf(Object);
 
-                data = manager.getEntityWithComponent(entity, 'Unit');
+                data = manager.getComponentDataForEntity('Unit', entity);
                 expect(data).to.be.instanceOf(Object);
 
                 manager.removeEntity(entity);
 
                 // Verify all data does not exist anymore.
                 expect(function () {
-                    manager.getEntityWithComponent(entity, 'Position');
+                    manager.getComponentDataForEntity('Position', entity);
                 }).to.throw('No data for component Position and entity ' + entity);
 
                 expect(function () {
-                    manager.getEntityWithComponent(entity, 'Unit');
+                    manager.getComponentDataForEntity('Unit', entity);
                 }).to.throw('No data for component Unit and entity ' + entity);
 
                 expect(manager.entities[entity]).to.be.undefined;
@@ -140,17 +140,17 @@ define(function (require) {
                 manager.removeEntity(entity3);
 
                 var fn1 = function () {
-                    manager.getEntityWithComponent(entity1, 'Position');
+                    manager.getComponentDataForEntity('Position', entity1);
                 }
 
                 var fn3 = function () {
-                    manager.getEntityWithComponent(entity3, 'Position');
+                    manager.getComponentDataForEntity('Position', entity3);
                 }
 
                 expect(fn1).to.throw('No data for component Position and entity ' + entity1);
                 expect(fn3).to.throw('No data for component Position and entity ' + entity3);
 
-                expect(manager.getEntityWithComponent(entity2, 'Position')).to.be.ok;
+                expect(manager.getComponentDataForEntity('Position', entity2)).to.be.ok;
             });
         });
 
@@ -161,11 +161,11 @@ define(function (require) {
 
                 manager.addComponentsToEntity(entity, ['Unit']);
 
-                var dataPos = manager.getEntityWithComponent(entity, 'Position');
+                var dataPos = manager.getComponentDataForEntity('Position', entity);
                 expect(dataPos.__id).to.exist;
                 expect(dataPos.__id).to.equal(entity);
 
-                var dataPos = manager.getEntityWithComponent(entity, 'Unit');
+                var dataPos = manager.getComponentDataForEntity('Unit', entity);
                 expect(dataPos.__id).to.exist;
                 expect(dataPos.__id).to.equal(entity);
             });
@@ -176,11 +176,11 @@ define(function (require) {
 
                 manager.addComponentsToEntity(entity, ['Unit']);
 
-                var dataPos = manager.getEntityWithComponent(entity, 'Position');
+                var dataPos = manager.getComponentDataForEntity('Position', entity);
                 expect(dataPos.x).to.equal(0);
                 expect(dataPos.attack).to.be.undefined;
 
-                var dataUnit = manager.getEntityWithComponent(entity, 'Unit');
+                var dataUnit = manager.getComponentDataForEntity('Unit', entity);
                 expect(dataUnit.attack).to.equal(10);
                 expect(dataUnit.x).to.be.undefined;
             });
@@ -191,7 +191,7 @@ define(function (require) {
                 var entity2 = manager.createEntity(['Position', 'Unit']);
                 var entity3 = manager.createEntity(['Position']);
 
-                var dataPos = manager.getEntityWithComponent(entity1, 'Position');
+                var dataPos = manager.getComponentDataForEntity('Position', entity1);
                 expect(dataPos.x).to.equal(0);
                 expect(dataPos.y).to.equal(0);
                 expect(dataPos.z).to.equal(0);
@@ -208,7 +208,7 @@ define(function (require) {
                 expect(dataPos.y).to.equal(0);
                 expect(dataPos.z).to.equal(32);
 
-                var dataUnit = manager.getEntityWithComponent(entity1, 'Unit');
+                var dataUnit = manager.getComponentDataForEntity('Unit', entity1);
                 expect(dataUnit.attack).to.equal(10);
                 expect(dataUnit.defense).to.equal(5);
                 expect(dataUnit.speed).to.equal(1);
@@ -221,12 +221,12 @@ define(function (require) {
                 expect(dataUnit.speed).to.equal(3);
                 expect(dataUnit.range).to.equal(2);
 
-                var dataPos2 = manager.getEntityWithComponent(entity2, 'Position');
+                var dataPos2 = manager.getComponentDataForEntity('Position', entity2);
                 expect(dataPos2.x).to.equal(0);
                 expect(dataPos2.y).to.equal(0);
                 expect(dataPos2.z).to.equal(0);
 
-                var dataPos3 = manager.getEntityWithComponent(entity3, 'Position');
+                var dataPos3 = manager.getComponentDataForEntity('Position', entity3);
                 expect(dataPos3.x).to.equal(0);
                 expect(dataPos3.y).to.equal(0);
                 expect(dataPos3.z).to.equal(0);
@@ -244,13 +244,13 @@ define(function (require) {
                 var entity = manager.createEntity(['Position']);
                 manager.addComponentsToEntity(entity, ['Unit']);
 
-                var dataPos = manager.getEntityWithComponent(entity, 'Position');
+                var dataPos = manager.getComponentDataForEntity('Position', entity);
                 dataPos.x = 43;
 
                 expect(events.length).to.equal(1);
                 expect(events[0]).to.deep.equal(['entityComponentUpdated', entity, 'Position']);
 
-                var dataUnit = manager.getEntityWithComponent(entity, 'Unit');
+                var dataUnit = manager.getComponentDataForEntity('Unit', entity);
                 dataUnit.speed = 44;
                 dataUnit.attack = 42;
                 dataUnit.attack = 4;
@@ -270,12 +270,12 @@ define(function (require) {
                 manager.removeComponentsFromEntity(entity, ['Unit']);
 
                 // Verify the 'Position' component is still here.
-                var dataPos = manager.getEntityWithComponent(entity, 'Position');
+                var dataPos = manager.getComponentDataForEntity('Position', entity);
                 expect(dataPos).to.be.instanceOf(Object);
 
                 // Verify the 'Unit' component has been removed.
                 expect(function () {
-                    manager.getEntityWithComponent(entity, 'Unit');
+                    manager.getComponentDataForEntity('Unit', entity);
                 }).to.throw('No data for component Unit and entity ' + entity);
             });
 
@@ -287,23 +287,23 @@ define(function (require) {
 
                 // Verify the 'Position' component has been removed.
                 expect(function () {
-                    manager.getEntityWithComponent(entity, 'Position');
+                    manager.getComponentDataForEntity('Position', entity);
                 }).to.throw('No data for component Position and entity ' + entity);
 
                 // Verify the 'Unit' component has been removed.
                 expect(function () {
-                    manager.getEntityWithComponent(entity, 'Unit');
+                    manager.getComponentDataForEntity('Unit', entity);
                 }).to.throw('No data for component Unit and entity ' + entity);
             });
         });
 
-        describe('#getEntityWithComponent()', function () {
+        describe('#getComponentDataForEntity()', function () {
             it('returns the correct data object', function () {
                 var manager = prepareManager();
 
                 var entity = manager.createEntity(['Position', 'Unit']);
-                var dataPos = manager.getEntityWithComponent(entity, 'Position');
-                var dataUnit = manager.getEntityWithComponent(entity, 'Unit');
+                var dataPos = manager.getComponentDataForEntity('Position', entity);
+                var dataUnit = manager.getComponentDataForEntity('Unit', entity);
 
                 expect(dataPos.x).to.equal(0);
                 expect(dataPos.y).to.equal(0);
@@ -329,7 +329,7 @@ define(function (require) {
                 var entity = manager.createEntity(['Position', 'Unit']);
 
                 var fn = function () {
-                    manager.getEntityWithComponent(entity, 'UnknownComponent');
+                    manager.getComponentDataForEntity('UnknownComponent', entity);
                 };
 
                 expect(fn).to.throw('Trying to use unknown component: UnknownComponent');
@@ -340,7 +340,7 @@ define(function (require) {
                 var entity = manager.createEntity(['Position']);
 
                 var fn = function () {
-                    manager.getEntityWithComponent(entity, 'Unit');
+                    manager.getComponentDataForEntity('Unit', entity);
                 };
 
                 expect(fn).to.throw('No data for component Unit and entity ' + entity);
@@ -354,14 +354,14 @@ define(function (require) {
                 manager.createEntity(['Unit']);
 
                 var fn = function () {
-                    manager.getEntityWithComponent(entity, 'Unit');
+                    manager.getComponentDataForEntity('Unit', entity);
                 };
 
                 expect(fn).to.throw('No data for component Unit and entity ' + entity);
             });
         });
 
-        describe('#getEntitiesWithComponent()', function () {
+        describe('#getComponentsData()', function () {
             it('returns the correct array', function () {
                 var manager = prepareManager();
 
@@ -370,10 +370,10 @@ define(function (require) {
                 manager.createEntity(['Position']);
                 manager.createEntity(['Unit']);
 
-                var allPositions = manager.getEntitiesWithComponent('Position');
+                var allPositions = manager.getComponentsData('Position');
                 expect(Object.keys(allPositions)).to.have.length(3);
 
-                var allUnits = manager.getEntitiesWithComponent('Unit');
+                var allUnits = manager.getComponentsData('Unit');
                 expect(Object.keys(allUnits)).to.have.length(1);
             });
 
@@ -382,7 +382,7 @@ define(function (require) {
                 manager.createEntity(['Position', 'Unit']);
 
                 var fn = function () {
-                    manager.getEntitiesWithComponent('UnknownComponent');
+                    manager.getComponentsData('UnknownComponent');
                 };
 
                 expect(fn).to.throw('Trying to use unknown component: UnknownComponent');
@@ -392,7 +392,7 @@ define(function (require) {
                 var manager = prepareManager();
                 manager.createEntity(['Position']);
 
-                var components = manager.getEntitiesWithComponent('Unit');
+                var components = manager.getComponentsData('Unit');
 
                 expect(components).to.be.a('array');
                 expect(components).to.have.length(0);

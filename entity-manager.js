@@ -266,7 +266,7 @@ define(function () {
      * @param {string} componentId - Unique identifier of the component.
      * @return {object} - Component data of one entity.
      */
-    EntityManager.prototype.getEntityWithComponent = function (entityId, componentId) {
+    EntityManager.prototype.getComponentDataForEntity = function (componentId, entityId) {
         if (!(componentId in this.components)) {
             throw new Error('Trying to use unknown component: ' + componentId);
         }
@@ -287,7 +287,7 @@ define(function () {
      * @param {string} componentId - Unique identifier of the component.
      * @return {array} - List of component data for one component.
      */
-    EntityManager.prototype.getEntitiesWithComponent = function (componentId) {
+    EntityManager.prototype.getComponentsData = function (componentId) {
         if (!(componentId in this.components)) {
             throw new Error('Trying to use unknown component: ' + componentId);
         }

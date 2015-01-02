@@ -98,7 +98,7 @@ function (EntityManager,    ProcessorManager,    PIXI) {
     };
 
     RenderingProcessor.prototype.initTiles = function () {
-        var cards = this.manager.getEntitiesWithComponent('Card');
+        var cards = this.manager.getComponentsData('Card');
         for (var entityId in cards) {
             this.createCardTile(entityId, cards[entityId]);
         }
@@ -124,19 +124,19 @@ function (EntityManager,    ProcessorManager,    PIXI) {
     };
 
     RenderingProcessor.prototype.update = function () {
-        var found = this.manager.getEntitiesWithComponent('CardFound');
+        var found = this.manager.getComponentsData('CardFound');
         for (var entityId in found) {
             this.container.removeChild(this.sprites[entityId]);
             this.manager.removeEntity(entityId);
         }
 
-        var faceDown = this.manager.getEntitiesWithComponent('CardFaceDown');
+        var faceDown = this.manager.getComponentsData('CardFaceDown');
         for (var entityId in faceDown) {
             this.sprites[entityId].tint = 0x000000;
             this.sprites[entityId].alpha = 0.5;
         }
 
-        var faceUp = this.manager.getEntitiesWithComponent('CardFaceUp');
+        var faceUp = this.manager.getComponentsData('CardFaceUp');
         for (var entityId in faceUp) {
             this.sprites[entityId].tint = 0xffffff;
             this.sprites[entityId].alpha = 1.0;
@@ -181,7 +181,7 @@ function (EntityManager,    ProcessorManager,    PIXI) {
 
         for (var i = chosenTiles.length - 1; i >= 0; i--) {
             var cardId = this.manager.createEntity(['Card', 'CardFaceDown']);
-            var card = this.manager.getEntityWithComponent(cardId, 'Card');
+            var card = this.manager.getComponentDataForEntity('Card', cardId);
             card.tile = chosenTiles[i];
             card.x = i % this.width;
             card.y = Math.floor(i / this.width);
@@ -194,11 +194,11 @@ function (EntityManager,    ProcessorManager,    PIXI) {
 
         // Get all the cards currently face up, used in tests because we never
         // want to have more than 2 cards face up.
-        var faceUp = manager.getEntitiesWithComponent('CardFaceUp');
+        var faceUp = manager.getComponentsData('CardFaceUp');
         var faceUpIds = Object.keys(faceUp);
 
         // Go through clicked cards and turn them face up if possible.
-        var clicked = manager.getEntitiesWithComponent('CardClicked');
+        var clicked = manager.getComponentsData('CardClicked');
         for (card in clicked) {
             if (Object.keys(faceUp).length < 2 && manager.entityHasComponent(card, 'CardFaceDown')) {
                 manager.removeComponentsFromEntity(card, ['CardFaceDown']);
@@ -222,8 +222,8 @@ function (EntityManager,    ProcessorManager,    PIXI) {
         if (faceUpIds.length == 2 && this.timerStart) {
             var now = +new Date();
             if (now - this.timerStart >= 1000) {
-                var card1 = manager.getEntityWithComponent(faceUpIds[0], 'Card');
-                var card2 = manager.getEntityWithComponent(faceUpIds[1], 'Card');
+                var card1 = manager.getComponentDataForEntity('Card', faceUpIds[0]);
+                var card2 = manager.getComponentDataForEntity('Card', faceUpIds[1]);
 
                 if (card1.tile === card2.tile) {
                     // Found a pair.
