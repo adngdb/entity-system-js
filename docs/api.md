@@ -4,7 +4,40 @@
 
 ## EntityManager 
 Implement the Entity System model and provide tools to easily
-create and manipulate Components and Entities.
+create and manipulate Entities, Components and Processors.
+
+## getUid()
+
+Return an identifier unique to this system.
+
+### Return:
+
+* **int** - Unique identifier.
+
+## createEntity(componentIds)
+
+Create a new entity in the system by creating a new instance of each of
+its components.
+
+### Params:
+
+* **array** *componentIds* - List of identifiers of the components that compose the new entity.
+
+### Return:
+
+* **int** - Unique identifier of the new entity.
+
+## removeEntity(id)
+
+Remove an entity and its instanciated components from the system.
+
+### Params:
+
+* **int** *id* - Unique identifier of the entity.
+
+### Return:
+
+* **object** - this
 
 ## addComponent(id, component)
 
@@ -31,30 +64,13 @@ Remove a component from the list of known components.
 
 * **object** - this
 
-## createEntity(componentIds)
+## getComponentsList()
 
-Create a new entity in the system by creating a new instance of each of
-its components.
-
-### Params:
-
-* **array** *componentIds* - List of identifiers of the components that compose the new entity.
+Get the list of components this instance knows.
 
 ### Return:
 
-* **int** - Unique identifier of the new entity.
-
-## removeEntity(id)
-
-Remove an entity and its instanciated components from the system.
-
-### Params:
-
-* **int** *id* - Unique identifier of the entity.
-
-### Return:
-
-* **object** - this
+* **array** - List of names of components.
 
 ## addComponentsToEntity(entityId, componentIds)
 
@@ -83,7 +99,7 @@ De-associate a list of components from the entity.
 
 * **object** - this
 
-## getEntityWithComponent(entityId, componentId)
+## getComponentDataForEntity(entityId, componentId)
 
 Return a reference to an object that contains the data of an
 instanciated component of an entity.
@@ -97,7 +113,7 @@ instanciated component of an entity.
 
 * **object** - Component data of one entity.
 
-## getEntitiesWithComponent(componentId)
+## getComponentsData(componentId)
 
 Return a list of objects containing the data of all of a given component.
 
@@ -122,21 +138,41 @@ Return true if the entity has the component.
 
 * **boolean** - True if the entity has the component.
 
-## getComponentsList()
+## addProcessor(processor)
 
-Get the list of components this instance knows.
+Add a processor to the list of known processors.
 
-### Return:
+### Params:
 
-* **array** - List of names of components.
-
-## getUid()
-
-Return an identifier unique to this system.
+* **object** *processor* - An instance of a processor to manage.
 
 ### Return:
 
-* **int** - Unique identifier.
+* **object** - this
+
+## removeProcessor(processor)
+
+Remove a processor from the list of known processors.
+
+### Params:
+
+* **object** *processor* - An instance of a processor to remove.
+
+### Return:
+
+* **object** - this
+
+## update(dt)
+
+Update all the known processors.
+
+### Params:
+
+* **int** *dt* - The time delta since the last call to update. Will be passed as an argument to all processor's `update` method.
+
+### Return:
+
+* **object** - this
 
 <!-- End entity-manager.js -->
 
@@ -164,7 +200,7 @@ Update all the known processors.
 
 ### Params:
 
-* **int** *dt* - The time delta, in miliseconds, since the last call to update.
+* **int** *dt* - The time delta since the last call to update. Will be passed as an argument to all processor's `update` method.
 
 ### Return:
 

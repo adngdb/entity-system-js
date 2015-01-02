@@ -15,13 +15,12 @@
 require.config({
   paths: {
     'entity-manager': ['../../../entity-manager'],
-    'processor-manager': ['../../../processor-manager'],
     'lib': './lib'
   }
 });
 
-require(['entity-manager', 'processor-manager', 'lib/pixi'],
-function (EntityManager,    ProcessorManager,    PIXI) {
+require(['entity-manager', 'lib/pixi'],
+function (EntityManager,    PIXI) {
 
     var stage = new PIXI.Stage(0x888888);
     var renderer = PIXI.autoDetectRenderer(640, 480);
@@ -263,16 +262,15 @@ function (EntityManager,    ProcessorManager,    PIXI) {
         // in our processors' constructors, order here matters.
         // CardProcessor creates all the card entities, and RenderingProcessor
         // then creates all the sprites to go with them.
-        var processors = new ProcessorManager();
-        processors.addProcessor(new CardProcessor(manager));
-        processors.addProcessor(new RenderingProcessor(manager));
+        manager.addProcessor(new CardProcessor(manager));
+        manager.addProcessor(new RenderingProcessor(manager));
 
         // Start the main loop of the game.
         requestAnimFrame(animate);
         function animate() {
             requestAnimFrame(animate);
 
-            processors.update();
+            manager.update();
         }
     }
 

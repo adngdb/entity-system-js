@@ -56,4 +56,10 @@ MyProcessor.prototype.update = function (dt) {
 
     // Do something on those entities...
 };
+
+manager.addProcessor(new MyProcessor(manager));
+
+while (true) {
+    manager.update();
+}
 ```

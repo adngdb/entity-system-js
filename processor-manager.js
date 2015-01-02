@@ -40,7 +40,7 @@ define(function () {
     /**
      * Update all the known processors.
      *
-     * @param {int} dt - The time delta, in miliseconds, since the last call to update.
+     * @param {int} dt - The time delta since the last call to update. Will be passed as an argument to all processor's `update` method.
      * @return {object} - this
      */
     ProcessorManager.prototype.update = function (dt) {

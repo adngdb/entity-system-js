@@ -54,7 +54,7 @@ define(function () {
      * @class EntityManager
      *
      * Implement the Entity System model and provide tools to easily
-     * create and manipulate Components and Entities.
+     * create and manipulate Entities, Components and Processors.
      */
     var EntityManager = function () {
         // A list of entity IDs, each being a simple integer.
@@ -89,6 +89,9 @@ define(function () {
          *   this.entityComponentData[componentId]
          */
         this.entityComponentData = {};
+
+        // The ordered list of processors known by this manager.
+        this.processors = [];
 
         // The next unique identifier.
         this.uid = 0;
@@ -339,6 +342,44 @@ define(function () {
             this.entityComponentData.hasOwnProperty(componentId) &&
             this.entityComponentData[componentId].hasOwnProperty(entityId)
         );
+    };
+
+    //=========================================================================
+    // PROCESSORS
+
+    /**
+     * Add a processor to the list of known processors.
+     *
+     * @param {object} processor - An instance of a processor to manage.
+     * @return {object} - this
+     */
+    EntityManager.prototype.addProcessor = function (processor) {
+        this.processors.push(processor);
+        return this;
+    };
+
+    /**
+     * Remove a processor from the list of known processors.
+     *
+     * @param {object} processor - An instance of a processor to remove.
+     * @return {object} - this
+     */
+    EntityManager.prototype.removeProcessor = function (processor) {
+        this.processors.splice(this.processors.indexOf(processor), 1);
+        return this;
+    };
+
+    /**
+     * Update all the known processors.
+     *
+     * @param {int} dt - The time delta since the last call to update. Will be passed as an argument to all processor's `update` method.
+     * @return {object} - this
+     */
+    EntityManager.prototype.update = function (dt) {
+        for (var i = 0; i < this.processors.length; i++) {
+            this.processors[i].update(dt);
+        }
+        return this;
     };
 
     return EntityManager;

@@ -15,8 +15,6 @@ if (typeof define !== 'function') {
 define(function (require) {
     var chai = require('chai');
     var expect = chai.expect;
-    //var assert = chai.assert;
-    //var should = chai.should();
 
     var EntityManager = require('../entity-manager');
     var PositionComponent = require('./components/position');
@@ -31,35 +29,8 @@ define(function (require) {
 
     describe('EntityManager', function () {
 
-        describe('#addComponent()', function () {
-            it('can add new components', function () {
-                var manager = new EntityManager();
-
-                manager.addComponent('Position', PositionComponent);
-                expect(manager.getComponentsList()).to.deep.equal(['Position']);
-
-                manager.addComponent('Unit', UnitComponent);
-                expect(manager.getComponentsList()).to.deep.equal(['Position', 'Unit']);
-            });
-        });
-
-        describe('#removeComponent()', function () {
-            it('can remove an existing component', function () {
-                var manager = prepareManager();
-                expect(manager.getComponentsList()).to.deep.equal(['Position', 'Unit']);
-
-                manager.removeComponent('Position');
-                expect(manager.getComponentsList()).to.deep.equal(['Unit']);
-            });
-
-            it('does not throw an error when trying to remove an unknown component', function () {
-                var manager = prepareManager();
-                expect(manager.getComponentsList()).to.deep.equal(['Position', 'Unit']);
-
-                manager.removeComponent('UnknownComponent');
-                expect(manager.getComponentsList()).to.deep.equal(['Position', 'Unit']);
-            });
-        });
+        //=====================================================================
+        // ENTITIES
 
         describe('#createEntity()', function () {
             it('can create a new single-component entity', function () {
@@ -151,6 +122,39 @@ define(function (require) {
                 expect(fn3).to.throw('No data for component Position and entity ' + entity3);
 
                 expect(manager.getComponentDataForEntity('Position', entity2)).to.be.ok;
+            });
+        });
+
+        //=====================================================================
+        // COMPONENTS
+
+        describe('#addComponent()', function () {
+            it('can add new components', function () {
+                var manager = new EntityManager();
+
+                manager.addComponent('Position', PositionComponent);
+                expect(manager.getComponentsList()).to.deep.equal(['Position']);
+
+                manager.addComponent('Unit', UnitComponent);
+                expect(manager.getComponentsList()).to.deep.equal(['Position', 'Unit']);
+            });
+        });
+
+        describe('#removeComponent()', function () {
+            it('can remove an existing component', function () {
+                var manager = prepareManager();
+                expect(manager.getComponentsList()).to.deep.equal(['Position', 'Unit']);
+
+                manager.removeComponent('Position');
+                expect(manager.getComponentsList()).to.deep.equal(['Unit']);
+            });
+
+            it('does not throw an error when trying to remove an unknown component', function () {
+                var manager = prepareManager();
+                expect(manager.getComponentsList()).to.deep.equal(['Position', 'Unit']);
+
+                manager.removeComponent('UnknownComponent');
+                expect(manager.getComponentsList()).to.deep.equal(['Position', 'Unit']);
             });
         });
 
@@ -406,6 +410,83 @@ define(function (require) {
 
                 expect(manager.entityHasComponent(entity, 'Position')).to.be.true;
                 expect(manager.entityHasComponent(entity, 'Unit')).to.be.false;
+            });
+        });
+
+        //=====================================================================
+        // PROCESSORS
+
+        describe('#addProcessor()', function () {
+            it('adds the processor to the list of processors', function () {
+                var manager = prepareManager();
+                expect(manager.processors).to.have.length(0);
+
+                var processor = {
+                    update: function (dt) {}
+                };
+                manager.addProcessor(processor);
+
+                expect(manager.processors).to.have.length(1);
+            });
+        });
+
+        describe('#removeProcessor()', function () {
+            it('removes the processor from the list of processors', function () {
+                var manager = prepareManager();
+                expect(manager.processors).to.have.length(0);
+
+                var processor1 = {
+                    update: function (dt) {}
+                };
+                manager.addProcessor(processor1);
+
+                var processor2 = {
+                    update: function (dt) {}
+                };
+                manager.addProcessor(processor2);
+
+                expect(manager.processors).to.have.length(2);
+
+                manager.removeProcessor(processor1);
+                expect(manager.processors).to.have.length(1);
+                expect(manager.processors).to.deep.equal([processor2]);
+            });
+        });
+
+        describe('#update()', function () {
+            it('updates all the processors in the list', function () {
+                var manager = prepareManager();
+
+                var callCount1 = 0;
+                var callCount2 = 0;
+
+                var processor1 = {
+                    update: function (dt) {
+                        callCount1++;
+                    }
+                };
+                manager.addProcessor(processor1);
+                manager.update();
+
+                expect(callCount1).to.equal(1);
+                expect(callCount2).to.equal(0);
+
+                var processor2 = {
+                    update: function (dt) {
+                        callCount2++;
+                    }
+                };
+                manager.addProcessor(processor2);
+                manager.update();
+
+                expect(callCount1).to.equal(2);
+                expect(callCount2).to.equal(1);
+
+                manager.removeProcessor(processor1);
+                manager.update();
+
+                expect(callCount1).to.equal(2);
+                expect(callCount2).to.equal(2);
             });
         });
     });
