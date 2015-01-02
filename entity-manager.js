@@ -95,28 +95,16 @@ define(function () {
     };
 
     /**
-     * Add a component to the list of known components.
+     * Return an identifier unique to this system.
      *
-     * @param {string} id - Unique identifier of the component.
-     * @param {object} component - Object containing the metadata and data of the component.
-     * @return {object} - this
+     * @return {int} - Unique identifier.
      */
-    EntityManager.prototype.addComponent = function (id, component) {
-        this.components[id] = component;
-        return this;
+    EntityManager.prototype.getUid = function () {
+        return this.uid++;
     };
 
-    /**
-     * Remove a component from the list of known components.
-     *
-     * @param {string} id - Unique identifier of the component.
-     * @return {object} - this
-     */
-    EntityManager.prototype.removeComponent = function (id) {
-        delete this.components[id];
-        delete this.entityComponentData[id];
-        return this;
-    };
+    //=========================================================================
+    // ENTITIES
 
     /**
      * Create a new entity in the system by creating a new instance of each of
@@ -152,6 +140,42 @@ define(function () {
         this.entities.splice(this.entities.indexOf(id), 1);
 
         return this;
+    };
+
+    //=========================================================================
+    // COMPONENTS
+
+    /**
+     * Add a component to the list of known components.
+     *
+     * @param {string} id - Unique identifier of the component.
+     * @param {object} component - Object containing the metadata and data of the component.
+     * @return {object} - this
+     */
+    EntityManager.prototype.addComponent = function (id, component) {
+        this.components[id] = component;
+        return this;
+    };
+
+    /**
+     * Remove a component from the list of known components.
+     *
+     * @param {string} id - Unique identifier of the component.
+     * @return {object} - this
+     */
+    EntityManager.prototype.removeComponent = function (id) {
+        delete this.components[id];
+        delete this.entityComponentData[id];
+        return this;
+    };
+
+    /**
+     * Get the list of components this instance knows.
+     *
+     * @return {array} - List of names of components.
+     */
+    EntityManager.prototype.getComponentsList = function () {
+        return Object.keys(this.components);
     };
 
     /**
@@ -315,24 +339,6 @@ define(function () {
             this.entityComponentData.hasOwnProperty(componentId) &&
             this.entityComponentData[componentId].hasOwnProperty(entityId)
         );
-    };
-
-    /**
-     * Get the list of components this instance knows.
-     *
-     * @return {array} - List of names of components.
-     */
-    EntityManager.prototype.getComponentsList = function () {
-        return Object.keys(this.components);
-    };
-
-    /**
-     * Return an identifier unique to this system.
-     *
-     * @return {int} - Unique identifier.
-     */
-    EntityManager.prototype.getUid = function () {
-        return this.uid++;
     };
 
     return EntityManager;
