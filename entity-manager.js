@@ -67,6 +67,13 @@ define(function () {
         //    newly instanciated component
         this.components = {};
 
+        // A dictionary of assemblages, where keys are the name of each
+        // assemblage. Assemblages are objects containing:
+        //  * metadata (name, description)
+        //  * a list of components to add to the entity
+        //  * an initial state for some components, to override the defaults
+        this.assemblages = {};
+
         /*!
          * A relational-like list of entity states. There is one line for
          * each entity - component association.
@@ -309,6 +316,26 @@ define(function () {
     };
 
     /**
+     * Update the state of a component, many keys at once.
+     *
+     * @param {int} entityId - Unique identifier of the entity.
+     * @param {string} componentId - Unique identifier of the component.
+     * @param {object} newState - Object containing the new state to apply.
+     * @return {object} - this
+     */
+    EntityManager.prototype.updateComponentDataForEntity = function (componentId, entityId, newState) {
+        var compState = this.getComponentDataForEntity(componentId, entityId);
+
+        for (var key in newState) {
+            if (newState.hasOwnProperty(key) && compState.hasOwnProperty(key)) {
+                compState[key] = newState[key];
+            }
+        }
+
+        return this;
+    };
+
+    /**
      * Return a list of objects containing the data of all of a given component.
      *
      * @param {string} componentId - Unique identifier of the component.
@@ -342,6 +369,57 @@ define(function () {
             this.entityComponentData.hasOwnProperty(componentId) &&
             this.entityComponentData[componentId].hasOwnProperty(entityId)
         );
+    };
+
+    //=========================================================================
+    // ASSEMBLAGES
+
+    /**
+     * Add an assemblage to the list of known assemblages.
+     *
+     * @param {string} id - Unique identifier of the assemblage.
+     * @param {object} assemblage - An instance of an assemblage to add.
+     * @return {object} - this
+     */
+    EntityManager.prototype.addAssemblage = function (id, assemblage) {
+        this.assemblages[id] = assemblage;
+        return this;
+    };
+
+    /**
+     * Remove an assemblage from the list of known assemblages.
+     *
+     * @param {string} id - Unique identifier of the assemblage.
+     * @return {object} - this
+     */
+    EntityManager.prototype.removeAssemblage = function (id) {
+        delete this.assemblages[id];
+        return this;
+    };
+
+    /**
+     * Create a new entity in the system by creating a new instance of each of
+     * its components and setting their initial state, using an assemblage.
+     *
+     * @param {string} assemblageId - Id of the assemblage to create the entity from.
+     * @return {int} - Unique identifier of the new entity.
+     */
+    EntityManager.prototype.createEntityFromAssemblage = function (assemblageId) {
+        if (!(assemblageId in this.assemblages)) {
+            throw new Error('Trying to use unknown assemblage: ' + assemblageId);
+        }
+
+        var assemblage = this.assemblages[assemblageId];
+        var entity = this.createEntity(assemblage.components);
+
+        for (var comp in assemblage.initialState) {
+            if (assemblage.initialState.hasOwnProperty(comp)) {
+                var newState = assemblage.initialState[comp];
+                this.updateComponentDataForEntity(comp, entity, newState);
+            }
+        }
+
+        return entity;
     };
 
     //=========================================================================

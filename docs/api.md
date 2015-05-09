@@ -113,6 +113,20 @@ instanciated component of an entity.
 
 * **object** - Component data of one entity.
 
+## updateComponentDataForEntity(entityId, componentId, newState)
+
+Update the state of a component, many keys at once.
+
+### Params:
+
+* **int** *entityId* - Unique identifier of the entity.
+* **string** *componentId* - Unique identifier of the component.
+* **object** *newState* - Object containing the new state to apply.
+
+### Return:
+
+* **object** - this
+
 ## getComponentsData(componentId)
 
 Return a list of objects containing the data of all of a given component.
@@ -137,6 +151,44 @@ Return true if the entity has the component.
 ### Return:
 
 * **boolean** - True if the entity has the component.
+
+## addAssemblage(id, assemblage)
+
+Add an assemblage to the list of known assemblages.
+
+### Params:
+
+* **string** *id* - Unique identifier of the assemblage.
+* **object** *assemblage* - An instance of an assemblage to add.
+
+### Return:
+
+* **object** - this
+
+## removeAssemblage(id)
+
+Remove an assemblage from the list of known assemblages.
+
+### Params:
+
+* **string** *id* - Unique identifier of the assemblage.
+
+### Return:
+
+* **object** - this
+
+## createEntityFromAssemblage(assemblageId)
+
+Create a new entity in the system by creating a new instance of each of
+its components and setting their initial state, using an assemblage.
+
+### Params:
+
+* **string** *assemblageId* - Id of the assemblage to create the entity from.
+
+### Return:
+
+* **int** - Unique identifier of the new entity.
 
 ## addProcessor(processor)
 

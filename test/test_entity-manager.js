@@ -19,6 +19,7 @@ define(function (require) {
     var EntityManager = require('../entity-manager');
     var PositionComponent = require('./components/position');
     var UnitComponent = require('./components/unit');
+    var SoldierAssemblage = require('./assemblages/soldier');
 
     function prepareManager() {
         var manager = new EntityManager();
@@ -365,6 +366,71 @@ define(function (require) {
             });
         });
 
+        describe('#updateComponentDataForEntity()', function () {
+            it('updates the data correctly', function () {
+                var manager = prepareManager();
+
+                var entity = manager.createEntity(['Position', 'Unit']);
+                var dataPos = manager.getComponentDataForEntity('Position', entity);
+                var dataUnit = manager.getComponentDataForEntity('Unit', entity);
+
+                expect(dataPos.x).to.equal(0);
+                expect(dataPos.y).to.equal(0);
+                expect(dataPos.z).to.equal(0);
+                expect(dataPos.attack).to.be.undefined;
+
+                manager.updateComponentDataForEntity('Position', entity, {x: 12});
+
+                expect(dataPos.x).to.equal(12);
+
+                expect(dataUnit.attack).to.equal(10);
+                expect(dataUnit.speed).to.equal(1);
+                expect(dataUnit.x).to.be.undefined;
+
+                manager.updateComponentDataForEntity('Unit', entity, {attack: 12, speed: 2.5, x: 1});
+
+                expect(dataUnit.attack).to.equal(12);
+                expect(dataUnit.speed).to.equal(2.5);
+                expect(dataUnit.x).to.be.undefined;
+            });
+
+            it('throws an error when the component does not exist', function () {
+                var manager = prepareManager();
+                var entity = manager.createEntity(['Position', 'Unit']);
+
+                var fn = function () {
+                    manager.updateComponentDataForEntity('UnknownComponent', entity, {});
+                };
+
+                expect(fn).to.throw('Trying to use unknown component: UnknownComponent');
+            });
+
+            it('throws an error when the component has no data', function () {
+                var manager = prepareManager();
+                var entity = manager.createEntity(['Position']);
+
+                var fn = function () {
+                    manager.updateComponentDataForEntity('Unit', entity, {});
+                };
+
+                expect(fn).to.throw('No data for component Unit and entity ' + entity);
+            });
+
+            it('throws an error when the entity does not contain the component', function () {
+                var manager = prepareManager();
+                var entity = manager.createEntity(['Position']);
+
+                // Create an entity with the Unit component so it has data.
+                manager.createEntity(['Unit']);
+
+                var fn = function () {
+                    manager.updateComponentDataForEntity('Unit', entity, {});
+                };
+
+                expect(fn).to.throw('No data for component Unit and entity ' + entity);
+            });
+        });
+
         describe('#getComponentsData()', function () {
             it('returns the correct array', function () {
                 var manager = prepareManager();
@@ -410,6 +476,77 @@ define(function (require) {
 
                 expect(manager.entityHasComponent(entity, 'Position')).to.be.true;
                 expect(manager.entityHasComponent(entity, 'Unit')).to.be.false;
+            });
+        });
+
+        //=====================================================================
+        // ASSEMBLAGES
+
+        describe('#addAssemblage()', function () {
+            it('can add new assemblages', function () {
+                var manager = new EntityManager();
+
+                manager.addAssemblage('Soldier', SoldierAssemblage);
+                expect(Object.keys(manager.assemblages)).to.deep.equal(['Soldier']);
+
+                var someAssemblage = {
+                    components: ['Position'],
+                    initialState: {}
+                }
+
+                manager.addAssemblage('Something', someAssemblage);
+                expect(Object.keys(manager.assemblages)).to.deep.equal(['Soldier', 'Something']);
+            });
+        });
+
+        describe('#removeAssemblage()', function () {
+            it('can remove an existing assemblage', function () {
+                var manager = prepareManager();
+                var someAssemblage = {
+                    components: ['Position'],
+                    initialState: {}
+                }
+
+                manager.addAssemblage('Soldier', SoldierAssemblage);
+                manager.addAssemblage('Something', someAssemblage);
+                expect(Object.keys(manager.assemblages)).to.deep.equal(['Soldier', 'Something']);
+
+                manager.removeAssemblage('Soldier');
+                expect(Object.keys(manager.assemblages)).to.deep.equal(['Something']);
+
+                manager.removeAssemblage('Something');
+                expect(Object.keys(manager.assemblages)).to.have.length(0);
+            });
+
+            it('does not throw an error when trying to remove an unknown assemblage', function () {
+                var manager = prepareManager();
+                manager.addAssemblage('Soldier', SoldierAssemblage);
+                expect(Object.keys(manager.assemblages)).to.deep.equal(['Soldier']);
+
+                manager.removeAssemblage('Unknown');
+                expect(Object.keys(manager.assemblages)).to.deep.equal(['Soldier']);
+            });
+        });
+
+        describe('#createEntityFromAssemblage()', function () {
+            it('correctly creates a new entity from an assemblage', function () {
+                var manager = prepareManager();
+                manager.addAssemblage('Soldier', SoldierAssemblage);
+
+                var entity = manager.createEntityFromAssemblage('Soldier');
+
+                var dataPos = manager.getComponentDataForEntity('Position', entity);
+                var dataUnit = manager.getComponentDataForEntity('Unit', entity);
+
+                expect(dataPos.x).to.equal(15);
+                expect(dataPos.y).to.equal(0);
+                expect(dataPos.z).to.equal(-1);
+                expect(dataPos.attack).to.be.undefined;
+                expect(dataPos.unknownattribute).to.be.undefined;
+
+                expect(dataUnit.attack).to.equal(10);
+                expect(dataUnit.speed).to.equal(1);
+                expect(dataUnit.x).to.be.undefined;
             });
         });
 
