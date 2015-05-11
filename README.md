@@ -25,7 +25,7 @@ require('entity-manager', function (EntityManager)) {
 
     manager.addComponent(Player.name, Player);
     var player = manager.createEntity(['Player']);
-    var playerData = manager.getEntityWithComponent(player, 'Player');
+    var playerData = manager.getComponentDataForEntity('Player', player);
     playerData.life = 80;
 }
 ```
@@ -35,6 +35,7 @@ require('entity-manager', function (EntityManager)) {
 There are examples in the [examples](https://github.com/AdrianGaudebert/component-entity/tree/master/examples) directory:
 
 * [Concentration](https://github.com/AdrianGaudebert/component-entity/tree/master/examples/concentration)
+* [Total Madness Arena](https://github.com/AdrianGaudebert/nth)
 * more to come...
 
 # For developers
