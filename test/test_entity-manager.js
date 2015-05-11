@@ -99,7 +99,7 @@ define(function (require) {
                     manager.getComponentDataForEntity('Unit', entity);
                 }).to.throw('No data for component Unit and entity ' + entity);
 
-                expect(manager.entities[entity]).to.be.undefined;
+                expect(manager.entities).to.not.include(entity);
             });
 
             it('can remove several existing entities', function () {
@@ -123,6 +123,10 @@ define(function (require) {
                 expect(fn3).to.throw('No data for component Position and entity ' + entity3);
 
                 expect(manager.getComponentDataForEntity('Position', entity2)).to.be.ok;
+
+                expect(manager.entities).to.not.include(entity1);
+                expect(manager.entities).to.not.include(entity3);
+                expect(manager.entities).to.include(entity2);
             });
         });
 

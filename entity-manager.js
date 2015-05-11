@@ -146,7 +146,7 @@ define(function () {
             }
         }
 
-        // Return the entity from the list of known entities.
+        // Remove the entity from the list of known entities.
         this.entities.splice(this.entities.indexOf(id), 1);
 
         return this;
