@@ -72,28 +72,28 @@ Get the list of components this instance knows.
 
 * **array** - List of names of components.
 
-## addComponentsToEntity(entityId, componentIds)
+## addComponentsToEntity(componentIds, entityId)
 
 Create a new instance of each listed component and associate them
 with the entity.
 
 ### Params:
 
-* **int** *entityId* - Unique identifier of the entity.
 * **array** *componentIds* - List of identifiers of the components to add to the entity.
+* **int** *entityId* - Unique identifier of the entity.
 
 ### Return:
 
 * **object** - this
 
-## removeComponentsFromEntity(entityId, componentIds)
+## removeComponentsFromEntity(componentIds, entityId)
 
 De-associate a list of components from the entity.
 
 ### Params:
 
-* **int** *entityId* - Unique identifier of the entity.
 * **array** *componentIds* - List of identifiers of the components to remove from the entity.
+* **int** *entityId* - Unique identifier of the entity.
 
 ### Return:
 

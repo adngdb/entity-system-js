@@ -113,7 +113,7 @@ function (EntityManager,    PIXI) {
 
         (function (cardId, sprite, self) {
             sprite.click = function () {
-                self.manager.addComponentsToEntity(cardId, ['CardClicked']);
+                self.manager.addComponentsToEntity(['CardClicked'], cardId);
             };
         })(cardId, sprite, this);
 
@@ -200,15 +200,15 @@ function (EntityManager,    PIXI) {
         var clicked = manager.getComponentsData('CardClicked');
         for (card in clicked) {
             if (Object.keys(faceUp).length < 2 && manager.entityHasComponent(card, 'CardFaceDown')) {
-                manager.removeComponentsFromEntity(card, ['CardFaceDown']);
-                manager.addComponentsToEntity(card, ['CardFaceUp']);
+                manager.removeComponentsFromEntity(['CardFaceDown'], card);
+                manager.addComponentsToEntity(['CardFaceUp'], card);
 
                 if (Object.keys(faceUp).length === 2) {
                     this.timerStart = +new Date();
                 }
             }
 
-            manager.removeComponentsFromEntity(card, ['CardClicked']);
+            manager.removeComponentsFromEntity(['CardClicked'], card);
         }
 
         if (faceUpIds.length > 2) {
@@ -226,15 +226,15 @@ function (EntityManager,    PIXI) {
 
                 if (card1.tile === card2.tile) {
                     // Found a pair.
-                    manager.addComponentsToEntity(faceUpIds[0], ['CardFound']);
-                    manager.addComponentsToEntity(faceUpIds[1], ['CardFound']);
+                    manager.addComponentsToEntity(['CardFound'], faceUpIds[0]);
+                    manager.addComponentsToEntity(['CardFound'], faceUpIds[1]);
                 }
                 else {
                     // Not a pair.
-                    manager.removeComponentsFromEntity(faceUpIds[0], ['CardFaceUp']);
-                    manager.removeComponentsFromEntity(faceUpIds[1], ['CardFaceUp']);
-                    manager.addComponentsToEntity(faceUpIds[0], ['CardFaceDown']);
-                    manager.addComponentsToEntity(faceUpIds[1], ['CardFaceDown']);
+                    manager.removeComponentsFromEntity(['CardFaceUp'], faceUpIds[0]);
+                    manager.removeComponentsFromEntity(['CardFaceUp'], faceUpIds[1]);
+                    manager.addComponentsToEntity(['CardFaceDown'], faceUpIds[0]);
+                    manager.addComponentsToEntity(['CardFaceDown'], faceUpIds[1]);
                 }
 
                 this.timerStart = null;
