@@ -168,7 +168,7 @@ define(function (require) {
                 var manager = prepareManager();
                 var entity = manager.createEntity(['Position']);
 
-                manager.addComponentsToEntity(entity, ['Unit']);
+                manager.addComponentsToEntity(['Unit'], entity);
 
                 var dataPos = manager.getComponentDataForEntity('Position', entity);
                 expect(dataPos.__id).to.exist;
@@ -183,7 +183,7 @@ define(function (require) {
                 var manager = prepareManager();
                 var entity = manager.createEntity(['Position']);
 
-                manager.addComponentsToEntity(entity, ['Unit']);
+                manager.addComponentsToEntity(['Unit'], entity);
 
                 var dataPos = manager.getComponentDataForEntity('Position', entity);
                 expect(dataPos.x).to.equal(0);
@@ -251,7 +251,7 @@ define(function (require) {
                 }
 
                 var entity = manager.createEntity(['Position']);
-                manager.addComponentsToEntity(entity, ['Unit']);
+                manager.addComponentsToEntity(['Unit'], entity);
 
                 var dataPos = manager.getComponentDataForEntity('Position', entity);
                 dataPos.x = 43;
@@ -276,7 +276,7 @@ define(function (require) {
                 var manager = prepareManager();
                 var entity = manager.createEntity(['Position', 'Unit']);
 
-                manager.removeComponentsFromEntity(entity, ['Unit']);
+                manager.removeComponentsFromEntity(['Unit'], entity);
 
                 // Verify the 'Position' component is still here.
                 var dataPos = manager.getComponentDataForEntity('Position', entity);
@@ -292,7 +292,7 @@ define(function (require) {
                 var manager = prepareManager();
                 var entity = manager.createEntity(['Position', 'Unit']);
 
-                manager.removeComponentsFromEntity(entity, ['Position', 'Unit']);
+                manager.removeComponentsFromEntity(['Position', 'Unit'], entity);
 
                 // Verify the 'Position' component has been removed.
                 expect(function () {

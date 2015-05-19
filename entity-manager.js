@@ -125,7 +125,7 @@ define(function () {
      */
     EntityManager.prototype.createEntity = function (componentIds) {
         var id = this.getUid();
-        this.addComponentsToEntity(id, componentIds);
+        this.addComponentsToEntity(componentIds, id);
         this.entities.push(id);
         return id;
     };
@@ -192,11 +192,11 @@ define(function () {
      * Create a new instance of each listed component and associate them
      * with the entity.
      *
-     * @param {int} entityId - Unique identifier of the entity.
      * @param {array} componentIds - List of identifiers of the components to add to the entity.
+     * @param {int} entityId - Unique identifier of the entity.
      * @return {object} - this
      */
-    EntityManager.prototype.addComponentsToEntity = function (entityId, componentIds) {
+    EntityManager.prototype.addComponentsToEntity = function (componentIds, entityId) {
         var i;
         var comp;
         var self = this;
@@ -258,11 +258,11 @@ define(function () {
     /**
      * De-associate a list of components from the entity.
      *
-     * @param {int} entityId - Unique identifier of the entity.
      * @param {array} componentIds - List of identifiers of the components to remove from the entity.
+     * @param {int} entityId - Unique identifier of the entity.
      * @return {object} - this
      */
-    EntityManager.prototype.removeComponentsFromEntity = function (entityId, componentIds) {
+    EntityManager.prototype.removeComponentsFromEntity = function (componentIds, entityId) {
         var i;
         var comp;
 
