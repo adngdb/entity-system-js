@@ -4,7 +4,7 @@ This is a JavaScript implementation of the Entity System model as described by A
 
 You can find the [API documentation](api/) here. A more comprehensive documentation is coming, along with a tutorial. [Soon](http://i2.kym-cdn.com/photos/images/facebook/000/117/021/enhanced-buzz-28895-1301694293-0.jpg).
 
-For examples of how to use this library, you can take a look at the [examples folder](https://github.com/AdrianGaudebert/entity-system-js/tree/master/examples) in the code repository.
+For examples of how to use this library, you can take a look at the [examples folder](https://github.com/AdrianGaudebert/entity-system-js/tree/master/examples) in the code repository. We also have a bigger scale example called [Total Madness Arena](https://github.com/AdrianGaudebert/nth), a game made during a [Game Dev Party Jam](http://gamedevparty.fr).
 
 # General concepts of an Entity System
 
@@ -12,13 +12,14 @@ There are 3 main concepts in the Entity System for JavaScript library, and other
 
 ## Entities
 
-Concretely, an Entity is a simple identifier, in our case an integer (though it might become a UUID in the future). Entities do nothing by themselves, but they are associated with a list of components. There is no "Entity object", no Entity data, no Entity state. Just a collection of instances of components, and those components are the objects, they contain the data and they have the state.
+Concretely, an Entity is a simple identifier, in our case an integer (though it might become a UUID in the future). Entities do nothing by themselves, but they are associated with a list of components. There is no "Entity object", no Entity data, no Entity state: just a collection of instances of components, and those components are the objects, they contain the data and they have the state.
 
 ```javascript
 var entity = manager.createEntity(['MyComponent']);
 console.log(entity);
 // > 1
 ```
+
 
 ## Components
 
@@ -42,6 +43,9 @@ console.log(aPositionData.x);
 // > 0
 ```
 
+Note: the ``state`` key is the only mandatory key in the root of a component. All others keys are metadata that won't be used by the Entity System. They are here for your convenience. For example, I try to always have a ``name`` in my components, and use that when declaring them, as shown in the example above. A ``description`` field could also be a good idea, especially when you start having a lot of components.
+
+
 ## Processors
 
 Components have no logic, so it has to live somewhere else. That's processors. Processors are at the core a simple ``update`` function that is called every frame of your game.
@@ -62,4 +66,28 @@ manager.addProcessor(new MyProcessor(manager));
 while (true) {
     manager.update();
 }
+```
+
+
+## Assemblages
+
+In a game, you often find yourself creating entities with the same components over and over. Assemblages are here to make that easier. They consist in a list of components, and some initial data to apply to those components. In your game, you can then easily create an entity from an assemblage, and automatically get the right components and the right default data.
+
+```javascript
+var MyAssemblage = {
+    name: 'SomeUnit',
+    components: ['Position', 'Sprite', 'Attack'],
+    initialState: {
+        Positon: {
+            x: 1,
+            y: 2
+        },
+        Sprite: {
+            source: 'assets/some-unit.png'
+        }
+    }
+};
+
+manager.addAssemblage(MyAssemblage.name, MyAssemblage);
+var entity = manager.createEntityFromAssemblage(MyAssemblage);
 ```
