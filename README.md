@@ -3,6 +3,16 @@
 JavaScript implementation of the Entity System model as described by Adam Martin
 in his blog post series [Entity Systems are the future of MMOs](http://t-machine.org/index.php/2009/10/26/entity-systems-are-the-future-of-mmos-part-5/).
 
+# Installation
+
+Using [``bower``](http://bower.io):
+
+```bower install ensy```
+
+Using [``npm``](http://npmjs.com):
+
+```npm install ensy```
+
 # Documentation
 
 The documentation is available on [Read the docs](http://entity-system-js.rtfd.org/). All methods are well documented and parameters are described. If you are familiar with Entity Systems, it shouldn't be too hard to understand.
