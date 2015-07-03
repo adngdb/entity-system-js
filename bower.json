@@ -1,0 +1,30 @@
+{
+    "name": "ensy",
+    "version": "1.0.0",
+    "description": "Entity System for JavaScript",
+    "homepage": "https://github.com/AdrianGaudebert/entity-system-js",
+    "authors": [
+        "Adrian Gaudebert <adrian@gaudebert.fr>"
+    ],
+    "license": "MIT",
+
+    "main": "entity-manager.js",
+    "moduleType": [
+        "amd",
+        "node"
+    ],
+    "keywords": [
+        "game",
+        "entity",
+        "ecs",
+        "gamedev",
+        "component"
+    ],
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ]
+}
