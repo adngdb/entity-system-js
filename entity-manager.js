@@ -220,34 +220,48 @@ define(function () {
                 this.entityComponentData[comp] = {};
             }
 
-            var newCompState = {};
-            (function (newCompState) {
-                var state = clone(self.components[comp].state);
+            var newCompState = null;
 
-                // Create a setter for each state attribute, so we can emit an
-                // event whenever the state of this component changes.
-                for (var property in state) {
-                    if (state.hasOwnProperty(property)) {
-                        (function (property) {
-                            Object.defineProperty(newCompState, property, {
-                                get: function () {
-                                    return state[property];
-                                },
-                                set: function (val) {
-                                    state[property] = val;
+            // If the manager has an emit function, we want to create getters
+            // and setters so that we can emit state changes. But if it does
+            // not have such a function, there is no need to add the overhead.
+            if (self.emit instanceof Function) {
+                newCompState = {};
+                (function (newCompState) {
+                    var state = clone(self.components[comp].state);
 
-                                    if (self.emit instanceof Function) {
-                                        self.emit('entityComponentUpdated', entityId, comp);
+                    // Create a setter for each state attribute, so we can emit an
+                    // event whenever the state of this component changes.
+                    for (var property in state) {
+                        if (state.hasOwnProperty(property)) {
+                            (function (property) {
+                                Object.defineProperty(newCompState, property, {
+                                    get: function () {
+                                        return state[property];
+                                    },
+                                    set: function (val) {
+                                        state[property] = val;
+
+                                        // Keeping this check here, even if
+                                        // there is already one above because
+                                        // this is JS and someone can remove
+                                        // the emit function at runtime.
+                                        if (self.emit instanceof Function) {
+                                            self.emit('entityComponentUpdated', entityId, comp);
+                                        }
                                     }
-                                }
-                            });
-                        })(property);
+                                });
+                            })(property);
+                        }
                     }
-                }
+                })(newCompState);
+            }
+            else {
+                newCompState = clone(self.components[comp].state);
+            }
 
-                // Store the entity's ID so it's easier to find other components for that entity.
-                newCompState.__id = entityId;
-            })(newCompState);
+            // Store the entity's ID so it's easier to find other components for that entity.
+            newCompState.__id = entityId;
 
             this.entityComponentData[comp][entityId] = newCompState;
         }
