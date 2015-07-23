@@ -269,6 +269,22 @@ define(function (require) {
                 expect(events[2]).to.deep.equal(['entityComponentUpdated', entity, 'Unit']);
                 expect(events[3]).to.deep.equal(['entityComponentUpdated', entity, 'Unit']);
             });
+
+            it('works with no emit function in the manager', function () {
+                var manager = prepareManager();
+                var events = [];
+
+                // Remove the emit function.
+                manager.emit = null;
+
+                var entity = manager.createEntity(['Position']);
+                manager.addComponentsToEntity(['Unit'], entity);
+
+                var dataPos = manager.getComponentDataForEntity('Position', entity);
+                expect(dataPos.x).to.equal(0);
+                dataPos.x = 43;
+                expect(dataPos.x).to.equal(43);
+            });
         });
 
         describe('#removeComponentsFromEntity()', function () {
