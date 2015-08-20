@@ -6,7 +6,7 @@ var numCsPerE = 50
 
 
 requirejs.config({
-    baseUrl: '..',
+    baseUrl: '../..',
 });
 
 require(['entity-manager'], function (EntityManager) {
@@ -42,6 +42,7 @@ var testing = false
 
 function onTestButton() {
     if (!testing) {
+        readInputs()
         startTest()
         out('Running...')
     } else {
@@ -49,8 +50,8 @@ function onTestButton() {
         out([ runCt, ' iterations over ', numCs, ' components, ', 
             numEs, ' entities w/ ', numCsPerE, ' components each',
             '<br>init time <b>' + initTime.toFixed(2) + '</b> ms', 
-            '<br>average time <b>' + (runTime/runCt).toFixed(2) + '</b> ms',
-            '<br>checksum: ' + (runningSum/runCt).toFixed(0) + ' ops/iter'
+            '<br>average time <b>' + (runTime/runCt).toFixed(2) + '</b> ms/iteration',
+            '<br>checksum: ' + (runningSum/runCt).toFixed(0) + ' sum/iteration'
         ].join(''))
     }
     testing = !testing
@@ -96,6 +97,7 @@ function iterateTest() {
     runCt++
     if (iterating) requestAnimationFrame(iterateTest)
 }
+// core iteration fcn, akin to running one process for each component
 function sumOverComponents(mgr, cnames) {
     var sum = 0
     for (var i=0; i<cnames.length; ++i) {
@@ -120,4 +122,14 @@ function endTest() {
     Es.length = 0
 }
 
+
+
+function readInputs() {
+    var nc = parseInt(document.getElementById('numC').value)
+    var ne = parseInt(document.getElementById('numE').value)
+    var ce = parseInt(document.getElementById('numCperE').value)
+    if (nc>0) numCs = nc
+    if (ne>0) numEs = ne
+    if (ce>0) numCsPerE = ce
+}
 

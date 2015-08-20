@@ -11,19 +11,30 @@
                 padding: 5px;
                 font-size: 16px;
             }
-           #output {
-                
+            input {
+                width: 3rem;
+                height: 0.9rem;
             }
         </style>
     </head>
 
     <body>
         <div class="test">
+            <input id="numC" class="test" value="200"> Total components
+        </div>        
+        <div class="test">
+            <input id="numE" class="test" value="500"> Total entities
+        </div>        
+        <div class="test">
+            <input id="numCperE" class="test" value="50"> Components per entity
+        </div>
+        <hr>
+        <div class="test">
             <button class="test" id="testbut">Start</button>
         </div>
         <div class="test">
             <span id="output"></span>
         </div>
-        <script src="../lib/require.js" data-main="bench.js"></script>
+        <script src="../../lib/require.js" data-main="bench.js"></script>
     </body>
 </html>
