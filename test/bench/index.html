@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+    <head>
+        <meta charset="utf-8">
+        <title>Benchmark - EntityManager.js</title>
+        <style type="text/css">
+            body {
+                font: 14px sans-serif;
+            }
+            .test {
+                line-height: 20px;
+                padding: 5px;
+                font-size: 16px;
+            }
+            input {
+                width: 3rem;
+                height: 0.9rem;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="test">
+            <input id="numC" class="test" value="200"> Total components
+        </div>        
+        <div class="test">
+            <input id="numE" class="test" value="500"> Total entities
+        </div>        
+        <div class="test">
+            <input id="numCperE" class="test" value="50"> Components per entity
+        </div>
+        <hr>
+        <div class="test">
+            <button class="test" id="testbut">Start</button>
+        </div>
+        <div class="test">
+            <span id="output"></span>
+        </div>
+        <script src="../../lib/require.js" data-main="bench.js"></script>
+    </body>
+</html>
