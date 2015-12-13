@@ -19,7 +19,8 @@
     "devDependencies": {
         "mocha": ">=1.8.2",
         "chai": ">=1.9.1",
-        "markdox": ">=0.1.7"
+        "markdox": ">=0.1.7",
+        "benchmark": ">=1.0.0"
     },
     "scripts": {
         "test": "make test",

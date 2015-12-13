@@ -3,7 +3,8 @@ if (typeof define !== 'function') {
     var define = require('amdefine')(module)
 }
 
-define(function () {/**
+define(function () {
+    /**
      * Class UnitComponent
      *
      * @author Adrian Gaudebert - adrian@gaudebert.fr
