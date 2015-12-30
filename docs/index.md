@@ -89,5 +89,5 @@ var MyAssemblage = {
 };
 
 manager.addAssemblage(MyAssemblage.name, MyAssemblage);
-var entity = manager.createEntityFromAssemblage(MyAssemblage);
+var entity = manager.createEntityFromAssemblage('SomeUnit');
 ```
