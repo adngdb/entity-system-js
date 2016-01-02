@@ -228,35 +228,3 @@ Update all the known processors.
 
 <!-- End entity-manager.js -->
 
-<!-- Start processor-manager.js -->
-
-## ProcessorManager 
-Implement the Entity System model and provide tools to easily
-manipulate Processors for you Entities.
-
-## addProcessor(processor)
-
-Add a processor to the list of known processors.
-
-### Params:
-
-* **object** *processor* - An instance of a processor to manage.
-
-### Return:
-
-* **object** - this
-
-## update(dt)
-
-Update all the known processors.
-
-### Params:
-
-* **int** *dt* - The time delta since the last call to update. Will be passed as an argument to all processor's `update` method.
-
-### Return:
-
-* **object** - this
-
-<!-- End processor-manager.js -->
-
