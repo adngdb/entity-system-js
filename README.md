@@ -42,9 +42,9 @@ require('entity-manager', function (EntityManager)) {
 
 # Examples
 
-There are examples in the [examples](https://github.com/adngdb/component-entity/tree/master/examples) directory:
+There are examples in the [examples](https://github.com/adngdb/entity-system-js/tree/master/examples) directory:
 
-* [Concentration](https://github.com/adngdb/component-entity/tree/master/examples/concentration)
+* [Concentration](https://github.com/adngdb/entity-system-js/tree/master/examples/concentration)
 * [Total Madness Arena](https://github.com/adngdb/nth)
 * more to come...
 
