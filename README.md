@@ -58,10 +58,16 @@ Install the dependencies with ``npm install``.
 $ npm test
 ```
 
+To have tests watch your files and re-run when they change:
+
+```bash
+$ npm run test-w
+```
+
 To run the tests in your browser:
 
 ```bash
-$ make test-browser
+$ npm run test-browser
 ```
 
 ## Building the documentation

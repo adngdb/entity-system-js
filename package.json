@@ -23,7 +23,9 @@
         "benchmark": ">=1.0.0"
     },
     "scripts": {
-        "test": "make test",
+        "test": "mocha `find test -name 'test_*.js'` --reporter spec",
+        "test-w": "mocha `find test -name 'test_*.js'` --reporter spec --growl --watch",
+        "test-browser": "xdg-open test/index.html",
         "build_doc": "markdox *.js --output=docs/api.md"
     }
 }
