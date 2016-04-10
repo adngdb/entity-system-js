@@ -5,13 +5,13 @@ in his blog post series [Entity Systems are the future of MMOs](http://t-machine
 
 # Installation
 
-Using [``bower``](http://bower.io):
-
-```bower install ensy```
-
 Using [``npm``](http://npmjs.com):
 
 ```npm install ensy```
+
+Using [``bower``](http://bower.io):
+
+```bower install ensy```
 
 # Documentation
 
