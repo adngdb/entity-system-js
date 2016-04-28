@@ -15,7 +15,7 @@ Using [``bower``](http://bower.io):
 
 # Documentation
 
-The documentation is available on [Read the docs](http://entity-system-js.rtfd.org/). All methods are well documented and parameters are described. If you are familiar with Entity Systems, it shouldn't be too hard to understand.
+The documentation is available on [Read the docs](https://entity-system-js.readthedocs.io/). All methods are well documented and parameters are described. If you are familiar with Entity Systems, it shouldn't be too hard to understand.
 
 Here is a quick example:
 
