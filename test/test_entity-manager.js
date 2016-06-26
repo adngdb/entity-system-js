@@ -21,8 +21,8 @@ define(function (require) {
     var UnitComponent = require('./components/unit');
     var SoldierAssemblage = require('./assemblages/soldier');
 
-    function prepareManager() {
-        var manager = new EntityManager();
+    function prepareManager(listener) {
+        var manager = new EntityManager(listener);
         manager.addComponent('Position', PositionComponent);
         manager.addComponent('Unit', UnitComponent);
         return manager;
@@ -242,13 +242,15 @@ define(function (require) {
             });
 
             it('emits an event when a state changes', function () {
-                var manager = prepareManager();
-                var events = [];
+                // Mock a listener object.
+                var listener = {
+                    events: [],
+                    emit: function(e, arg1, arg2) {
+                        this.events.push([e, arg1, arg2]);
+                    }
+                };
 
-                // Mock an emit function.
-                manager.emit = function (e, arg1, arg2) {
-                    events.push([e, arg1, arg2]);
-                }
+                var manager = prepareManager(listener);
 
                 var entity = manager.createEntity(['Position']);
                 manager.addComponentsToEntity(['Unit'], entity);
@@ -256,18 +258,18 @@ define(function (require) {
                 var dataPos = manager.getComponentDataForEntity('Position', entity);
                 dataPos.x = 43;
 
-                expect(events.length).to.equal(1);
-                expect(events[0]).to.deep.equal(['entityComponentUpdated', entity, 'Position']);
+                expect(listener.events.length).to.equal(1);
+                expect(listener.events[0]).to.deep.equal(['entityComponentUpdated', entity, 'Position']);
 
                 var dataUnit = manager.getComponentDataForEntity('Unit', entity);
                 dataUnit.speed = 44;
                 dataUnit.attack = 42;
                 dataUnit.attack = 4;
 
-                expect(events.length).to.equal(4);
-                expect(events[1]).to.deep.equal(['entityComponentUpdated', entity, 'Unit']);
-                expect(events[2]).to.deep.equal(['entityComponentUpdated', entity, 'Unit']);
-                expect(events[3]).to.deep.equal(['entityComponentUpdated', entity, 'Unit']);
+                expect(listener.events.length).to.equal(4);
+                expect(listener.events[1]).to.deep.equal(['entityComponentUpdated', entity, 'Unit']);
+                expect(listener.events[2]).to.deep.equal(['entityComponentUpdated', entity, 'Unit']);
+                expect(listener.events[3]).to.deep.equal(['entityComponentUpdated', entity, 'Unit']);
             });
 
             it('works with no emit function in the manager', function () {

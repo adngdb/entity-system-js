@@ -18,7 +18,7 @@ define(function () {
 
     /*!
      * Return a clone of an object.
-     * From http://stackoverflow.com/questions/728360
+     * From https://stackoverflow.com/questions/728360
      */
     function clone(obj) {
         // Handle the 3 simple types, and null or undefined
@@ -50,13 +50,26 @@ define(function () {
         }
     }
 
+    /*!
+     * Return true if the parameter is a function.
+     * From https://stackoverflow.com/questions/5999998
+     */
+    function isFunction(thingToCheck) {
+        return thingToCheck && ({}).toString.call(thingToCheck) === '[object Function]';
+    }
+
     /**
      * @class EntityManager
      *
      * Implement the Entity System model and provide tools to easily
      * create and manipulate Entities, Components and Processors.
      */
-    var EntityManager = function () {
+    var EntityManager = function (listener) {
+        this.listener = null;
+        if (listener && isFunction(listener.emit)) {
+            this.listener = listener;
+        }
+
         // A list of entity IDs, each being a simple integer.
         this.entities = [];
 
@@ -222,10 +235,10 @@ define(function () {
 
             var newCompState = null;
 
-            // If the manager has an emit function, we want to create getters
+            // If the manager has a listener, we want to create getters
             // and setters so that we can emit state changes. But if it does
-            // not have such a function, there is no need to add the overhead.
-            if (self.emit instanceof Function) {
+            // not have one, there is no need to add the overhead.
+            if (self.listener) {
                 newCompState = {};
                 (function (newCompState) {
                     var state = clone(self.components[comp].state);
@@ -241,14 +254,7 @@ define(function () {
                                     },
                                     set: function (val) {
                                         state[property] = val;
-
-                                        // Keeping this check here, even if
-                                        // there is already one above because
-                                        // this is JS and someone can remove
-                                        // the emit function at runtime.
-                                        if (self.emit instanceof Function) {
-                                            self.emit('entityComponentUpdated', entityId, comp);
-                                        }
+                                        self.listener.emit('entityComponentUpdated', entityId, comp);
                                     }
                                 });
                             })(property);
