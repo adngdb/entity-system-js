@@ -1,6 +1,6 @@
 
 
-<!-- Start entity-manager.js -->
+<!-- Start src/entity-manager.js -->
 
 ## EntityManager 
 Implement the Entity System model and provide tools to easily
@@ -226,5 +226,5 @@ Update all the known processors.
 
 * **object** - this
 
-<!-- End entity-manager.js -->
+<!-- End src/entity-manager.js -->
 

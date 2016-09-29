@@ -1,31 +1,35 @@
 {
-    "name": "ensy",
-    "version": "1.2.0",
-    "description": "Entity System for JavaScript",
-    "homepage": "https://github.com/adngdb/entity-system-js",
-    "author": "Adrian Gaudebert <adrian@gaudebert.fr> (http://adrian.gaudebert.fr)",
-    "license": "MIT",
-    "repository": {
-        "type" : "git",
-        "url" : "https://github.com/adngdb/entity-system-js"
-    },
-
-    "files": ["entity-manager.js"],
-    "main": "entity-manager.js",
-
-    "dependencies": {
-        "amdefine": ">=0.0.4"
-    },
-    "devDependencies": {
-        "mocha": ">=1.8.2",
-        "chai": ">=1.9.1",
-        "markdox": ">=0.1.7",
-        "benchmark": ">=1.0.0"
-    },
-    "scripts": {
-        "test": "mocha `find test -name 'test_*.js'` --reporter spec",
-        "test-w": "mocha `find test -name 'test_*.js'` --reporter spec --growl --watch",
-        "test-browser": "xdg-open test/index.html",
-        "build_doc": "markdox *.js --output=docs/api.md"
-    }
+  "name": "ensy",
+  "version": "1.2.1",
+  "description": "Entity System for JavaScript",
+  "homepage": "https://github.com/adngdb/entity-system-js",
+  "author": "Adrian Gaudebert <adrian@gaudebert.fr> (http://adrian.gaudebert.fr)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adngdb/entity-system-js"
+  },
+  "files": [
+    "entity-manager.js"
+  ],
+  "main": "entity-manager.js",
+  "dependencies": {},
+  "devDependencies": {
+    "amdefine": "^1.0.0",
+    "babel-preset-es2015-rollup": "^1.2.0",
+    "benchmark": ">=1.0.0",
+    "chai": ">=1.9.1",
+    "markdox": ">=0.1.7",
+    "mocha": ">=1.8.2",
+    "rollup": "^0.36.1",
+    "rollup-plugin-babel": "^2.6.1",
+    "rollup-plugin-uglify": "^1.0.1"
+  },
+  "scripts": {
+    "test": "mocha `find test -name 'test_*.js'` --reporter spec",
+    "test-w": "mocha `find test -name 'test_*.js'` --reporter spec --growl --watch",
+    "test-browser": "xdg-open test/index.html",
+    "build": "rollup -c",
+    "build_doc": "markdox src/*.js --output=docs/api.md"
+  }
 }

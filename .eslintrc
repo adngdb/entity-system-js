@@ -1,0 +1,24 @@
+rules:
+  indent:
+    - "error"
+    - 4
+  quotes:
+    - "warn"
+    - single
+  linebreak-style:
+    - "error"
+    - unix
+  semi:
+    - "error"
+    - always
+  comma-dangle:
+    - "warn"
+    - always-multiline
+  no-extra-semi:
+    - "error"
+env:
+  browser: true
+  es6: true
+parserOptions:
+  sourceType: "module"
+extends: 'eslint:recommended'
