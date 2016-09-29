@@ -7,11 +7,11 @@ in his blog post series [Entity Systems are the future of MMOs](http://t-machine
 
 Using [``npm``](http://npmjs.com):
 
-```npm install ensy```
+    ``npm install ensy`` or ``npm i -d ensy``
 
 Using [``bower``](http://bower.io):
 
-```bower install ensy```
+    ``bower install ensy``
 
 # Documentation
 
@@ -35,8 +35,18 @@ require('entity-manager', function (EntityManager)) {
 
     manager.addComponent(Player.name, Player);
     var player = manager.createEntity(['Player']);
+
+    // Update the player's stage:
     var playerData = manager.getComponentDataForEntity('Player', player);
     playerData.life = 80;
+
+    // Which is equivalent to:
+    manager.updateComponentDataForEntity('Player', player, {
+        life: 80,
+    });
+
+    console.log(playerData);
+    // { life: 80, strength: 18, charisma: 3 }
 }
 ```
 
@@ -50,7 +60,17 @@ There are examples in the [examples](https://github.com/adngdb/entity-system-js/
 
 # For developers
 
-Install the dependencies with ``npm install``.
+Install the dependencies with ``npm install``. The source files are in ``src/``.
+The code uses es6 features, and is compiled to es5 using babel.
+
+## Building the code
+
+```bash
+$ npm run build
+```
+
+We use rollup and babel to compile the code from es6 to es5, and uglify to
+minify the source code.
 
 ## Running tests
 
