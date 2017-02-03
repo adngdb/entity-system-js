@@ -1,3 +1,5 @@
+/* globals describe require module it */
+
 /**
  * Test cases for EntityManager class.
  *
@@ -9,7 +11,7 @@
 
 // for compatibility with node.js and require.js
 if (typeof define !== 'function') {
-    var define = require('amdefine')(module)
+    var define = require('amdefine')(module);
 }
 
 define(function (require) {
@@ -113,11 +115,11 @@ define(function (require) {
 
                 var fn1 = function () {
                     manager.getComponentDataForEntity('Position', entity1);
-                }
+                };
 
                 var fn3 = function () {
                     manager.getComponentDataForEntity('Position', entity3);
-                }
+                };
 
                 expect(fn1).to.throw('No data for component Position and entity ' + entity1);
                 expect(fn3).to.throw('No data for component Position and entity ' + entity3);
@@ -174,7 +176,7 @@ define(function (require) {
                 expect(dataPos.__id).to.exist;
                 expect(dataPos.__id).to.equal(entity);
 
-                var dataPos = manager.getComponentDataForEntity('Unit', entity);
+                dataPos = manager.getComponentDataForEntity('Unit', entity);
                 expect(dataPos.__id).to.exist;
                 expect(dataPos.__id).to.equal(entity);
             });
@@ -247,7 +249,7 @@ define(function (require) {
                     events: [],
                     emit: function(e, arg1, arg2) {
                         this.events.push([e, arg1, arg2]);
-                    }
+                    },
                 };
 
                 var manager = prepareManager(listener);
@@ -274,7 +276,6 @@ define(function (require) {
 
             it('works with no emit function in the manager', function () {
                 var manager = prepareManager();
-                var events = [];
 
                 // Remove the emit function.
                 manager.emit = null;
@@ -513,8 +514,8 @@ define(function (require) {
 
                 var someAssemblage = {
                     components: ['Position'],
-                    initialState: {}
-                }
+                    initialState: {},
+                };
 
                 manager.addAssemblage('Something', someAssemblage);
                 expect(Object.keys(manager.assemblages)).to.deep.equal(['Soldier', 'Something']);
@@ -526,8 +527,8 @@ define(function (require) {
                 var manager = prepareManager();
                 var someAssemblage = {
                     components: ['Position'],
-                    initialState: {}
-                }
+                    initialState: {},
+                };
 
                 manager.addAssemblage('Soldier', SoldierAssemblage);
                 manager.addAssemblage('Something', someAssemblage);
@@ -581,7 +582,7 @@ define(function (require) {
                 expect(manager.processors).to.have.length(0);
 
                 var processor = {
-                    update: function (dt) {}
+                    update: function () {},
                 };
                 manager.addProcessor(processor);
 
@@ -595,12 +596,12 @@ define(function (require) {
                 expect(manager.processors).to.have.length(0);
 
                 var processor1 = {
-                    update: function (dt) {}
+                    update: function () {},
                 };
                 manager.addProcessor(processor1);
 
                 var processor2 = {
-                    update: function (dt) {}
+                    update: function () {},
                 };
                 manager.addProcessor(processor2);
 
@@ -620,9 +621,9 @@ define(function (require) {
                 var callCount2 = 0;
 
                 var processor1 = {
-                    update: function (dt) {
+                    update: function () {
                         callCount1++;
-                    }
+                    },
                 };
                 manager.addProcessor(processor1);
                 manager.update();
@@ -631,9 +632,9 @@ define(function (require) {
                 expect(callCount2).to.equal(0);
 
                 var processor2 = {
-                    update: function (dt) {
+                    update: function () {
                         callCount2++;
-                    }
+                    },
                 };
                 manager.addProcessor(processor2);
                 manager.update();
