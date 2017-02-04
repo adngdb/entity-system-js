@@ -15,7 +15,7 @@ There are 3 main concepts in the Entity System for JavaScript library, and other
 Concretely, an Entity is a simple identifier, in our case an integer (though it might become a UUID in the future). Entities do nothing by themselves, but they are associated with a list of components. There is no "Entity object", no Entity data, no Entity state: just a collection of instances of components, and those components are the objects, they contain the data and they have the state.
 
 ```javascript
-var entity = manager.createEntity(['MyComponent']);
+let entity = manager.createEntity(['MyComponent']);
 console.log(entity);
 // > 1
 ```
@@ -28,7 +28,7 @@ A Component is a collection of states about an aspect of the game. It has no log
 Every time a component is added to an entity, a copy of the ``state`` is created and attached to that entity. You can then freely change all the values of that component's attributes without impacting other entities.
 
 ```javascript
-var positionComp = {
+const positionComp = {
     name: 'Position',
     state: {
         x: 0,
@@ -37,8 +37,8 @@ var positionComp = {
 };
 manager.addComponent(positionComp.name, positionComp);
 
-var aPosition = manager.createEntity(['Position']);
-var aPositionData = manager.getEntityWithComponent(aPosition, 'Position');
+let aPosition = manager.createEntity(['Position']);
+let aPositionData = manager.getEntityWithComponent(aPosition, 'Position');
 console.log(aPositionData.x);
 // > 0
 ```
@@ -51,12 +51,12 @@ Note: the ``state`` key is the only mandatory key in the root of a component. Al
 Components have no logic, so it has to live somewhere else. That's processors. Processors are at the core a simple ``update`` function that is called every frame of your game.
 
 ```javascript
-var MyProcessor = function (manager) {
+const MyProcessor = function (manager) {
     this.manager = manager;
 };
 
 MyProcessor.prototype.update = function (dt) {
-    var entities = this.manager.getEntitiesWithComponent('MyComponent');
+    let entities = this.manager.getEntitiesWithComponent('MyComponent');
 
     // Do something on those entities...
 };
@@ -74,7 +74,7 @@ while (true) {
 In a game, you often find yourself creating entities with the same components over and over. Assemblages are here to make that easier. They consist in a list of components, and some initial data to apply to those components. In your game, you can then easily create an entity from an assemblage, and automatically get the right components and the right default data.
 
 ```javascript
-var MyAssemblage = {
+const MyAssemblage = {
     name: 'SomeUnit',
     components: ['Position', 'Sprite', 'Attack'],
     initialState: {
@@ -89,5 +89,5 @@ var MyAssemblage = {
 };
 
 manager.addAssemblage(MyAssemblage.name, MyAssemblage);
-var entity = manager.createEntityFromAssemblage('SomeUnit');
+let entity = manager.createEntityFromAssemblage('SomeUnit');
 ```
