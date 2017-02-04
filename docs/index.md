@@ -4,7 +4,7 @@ This is a JavaScript implementation of the Entity System model as described by A
 
 You can find the [API documentation](api/) here. A more comprehensive documentation is coming, along with a tutorial. [Soon](http://i2.kym-cdn.com/photos/images/facebook/000/117/021/enhanced-buzz-28895-1301694293-0.jpg).
 
-For examples of how to use this library, you can take a look at the [examples folder](https://github.com/AdrianGaudebert/entity-system-js/tree/master/examples) in the code repository. We also have a bigger scale example called [Total Madness Arena](https://github.com/AdrianGaudebert/nth), a game made during a [Game Dev Party Jam](http://gamedevparty.fr).
+For examples of how to use this library, you can take a look at the [examples folder](https://github.com/adngdb/entity-system-js/tree/master/examples) in the code repository. We also have a bigger scale example called [Total Madness Arena](https://github.com/adngdb/nth), a game made during a [Game Dev Party Jam](http://gamedevparty.fr).
 
 # General concepts of an Entity System
 
