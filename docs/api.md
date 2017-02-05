@@ -14,7 +14,7 @@ Return an identifier unique to this system.
 
 * **int** - Unique identifier.
 
-## createEntity(componentIds)
+## createEntity(componentIds, entityId)
 
 Create a new entity in the system by creating a new instance of each of
 its components.
@@ -22,6 +22,7 @@ its components.
 ### Params:
 
 * **array** *componentIds* - List of identifiers of the components that compose the new entity.
+* **int** *entityId* - Optional. Unique identifier of the entity. If passed, no new id will be generated.
 
 ### Return:
 

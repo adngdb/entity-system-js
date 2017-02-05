@@ -76,6 +76,36 @@ define(function (require) {
 
                 expect(fn).to.throw('Trying to use unknown component: UnknownComponent');
             });
+
+            it('can create an entity with a specific UID', function () {
+                var manager = prepareManager();
+                var newEntityId = 42;
+
+                var entity = manager.createEntity(['Position'], newEntityId);
+                expect(entity).to.equal(newEntityId);
+
+                // Testing default values
+                var data = manager.getComponentDataForEntity('Position', entity);
+                expect(data.x).to.equal(0);
+
+                // Verify the internal UID number has changed to avoid conflicts.
+                expect(manager.uid).to.equal(newEntityId);
+            });
+
+            it('can override an existing entity', function () {
+                var manager = prepareManager();
+                var newEntityId = 42;
+
+                var entity = manager.createEntity(['Position'], newEntityId);
+                expect(entity).to.equal(newEntityId);
+                expect(manager.entityHasComponent(entity, 'Position')).to.be.true;
+                expect(manager.entityHasComponent(entity, 'Unit')).to.be.false;
+
+                entity = manager.createEntity(['Position', 'Unit'], newEntityId);
+                expect(entity).to.equal(newEntityId);
+                expect(manager.entityHasComponent(entity, 'Position')).to.be.true;
+                expect(manager.entityHasComponent(entity, 'Unit')).to.be.true;
+            });
         });
 
         describe('#removeEntity()', function () {
@@ -258,20 +288,26 @@ define(function (require) {
                 manager.addComponentsToEntity(['Unit'], entity);
 
                 var dataPos = manager.getComponentDataForEntity('Position', entity);
+
+                // Verify we have 3 events beforehand.
+                expect(listener.events.length).to.equal(3);
                 dataPos.x = 43;
 
-                expect(listener.events.length).to.equal(1);
-                expect(listener.events[0]).to.deep.equal(['entityComponentUpdated', entity, 'Position']);
+                expect(listener.events.length).to.equal(4);
+                expect(listener.events[3]).to.deep.equal(['entityComponentUpdated', entity, 'Position']);
+
+                // Reinitialize listener object.
+                listener.events = [];
 
                 var dataUnit = manager.getComponentDataForEntity('Unit', entity);
                 dataUnit.speed = 44;
                 dataUnit.attack = 42;
                 dataUnit.attack = 4;
 
-                expect(listener.events.length).to.equal(4);
+                expect(listener.events.length).to.equal(3);
+                expect(listener.events[0]).to.deep.equal(['entityComponentUpdated', entity, 'Unit']);
                 expect(listener.events[1]).to.deep.equal(['entityComponentUpdated', entity, 'Unit']);
                 expect(listener.events[2]).to.deep.equal(['entityComponentUpdated', entity, 'Unit']);
-                expect(listener.events[3]).to.deep.equal(['entityComponentUpdated', entity, 'Unit']);
             });
 
             it('works with no emit function in the manager', function () {

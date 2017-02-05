@@ -130,13 +130,27 @@ class EntityManager {
      * its components.
      *
      * @param {array} componentIds - List of identifiers of the components that compose the new entity.
+     * @param {int} entityId - Optional. Unique identifier of the entity. If passed, no new id will be generated.
      * @return {int} - Unique identifier of the new entity.
      */
-    createEntity(componentIds) {
-        var id = this.getUid();
-        this.addComponentsToEntity(componentIds, id);
-        this.entities.push(id);
-        return id;
+    createEntity(componentIds, entityId) {
+        if (typeof entityId === 'undefined' || entityId === null) {
+            entityId = this.getUid();
+        }
+        else if (entityId > this.uid) {
+            // Make sure another entity with the same ID won't be created in the future.
+            this.uid = entityId;
+        }
+
+        this.addComponentsToEntity(componentIds, entityId);
+        if (!this.entities.includes(entityId)) {
+            this.entities.push(entityId);
+        }
+        if (this.listener) {
+            // Signal the creation of a new entity.
+            this.listener.emit('entityCreated', entityId);
+        }
+        return entityId;
     }
 
     /**
@@ -157,6 +171,11 @@ class EntityManager {
 
         // Remove the entity from the list of known entities.
         this.entities.splice(this.entities.indexOf(id), 1);
+
+        if (this.listener) {
+            // Signal the removal of an entity.
+            this.listener.emit('entityCreated', id);
+        }
 
         return this;
     }
@@ -257,6 +276,9 @@ class EntityManager {
                         }
                     }
                 })(newCompState);
+
+                // Signal the addition of a new component to the entity.
+                self.listener.emit('entityComponentAdded', entityId, comp);
             }
             else {
                 newCompState = clone(self.components[comp].state);
@@ -300,6 +322,10 @@ class EntityManager {
             if (this.entityComponentData[comp]) {
                 if (this.entityComponentData[comp][entityId]) {
                     delete this.entityComponentData[comp][entityId];
+                    if (this.listener) {
+                        // Signal the creation of a new entity.
+                        this.listener.emit('entityComponentRemoved', entityId, comp);
+                    }
                 }
             }
         }
