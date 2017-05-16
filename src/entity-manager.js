@@ -255,7 +255,7 @@ class EntityManager {
             // not have one, there is no need to add the overhead.
             if (self.listener) {
                 newCompState = {};
-                (function (newCompState) {
+                (function (newCompState, comp) {
                     var state = clone(self.components[comp].state);
 
                     // Create a setter for each state attribute, so we can emit an
@@ -276,7 +276,7 @@ class EntityManager {
                             })(property);
                         }
                     }
-                })(newCompState);
+                })(newCompState, comp);
 
                 // Signal the addition of a new component to the entity.
                 self.listener.emit('entityComponentAdded', entityId, comp);

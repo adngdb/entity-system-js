@@ -273,6 +273,29 @@ define(function (require) {
                 expect(dataPos3.z).to.equal(0);
             });
 
+            it('emits the right component id', function () {
+                // Mock a listener object.
+                var listener = {
+                    events: [],
+                    emit: function(e, arg1, arg2) {
+                        this.events.push([e, arg1, arg2]);
+                    },
+                };
+
+                var manager = prepareManager(listener);
+                var entity = manager.createEntity(['Position', 'Unit']);
+
+                manager.updateComponentDataForEntity('Position', entity, {
+                    x: 12,
+                });
+                expect(listener.events.pop()).to.deep.equal(['entityComponentUpdated', entity, 'Position']);
+
+                manager.updateComponentDataForEntity('Unit', entity, {
+                    speed: 1,
+                });
+                expect(listener.events.pop()).to.deep.equal(['entityComponentUpdated', entity, 'Unit']);
+            });
+
             it('emits an event when a state changes', function () {
                 // Mock a listener object.
                 var listener = {
