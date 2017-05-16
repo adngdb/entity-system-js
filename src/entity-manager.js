@@ -264,6 +264,7 @@ class EntityManager {
                         if (state.hasOwnProperty(property)) {
                             (function (property) {
                                 Object.defineProperty(newCompState, property, {
+                                    enumerable: true,
                                     get: function () {
                                         return state[property];
                                     },
