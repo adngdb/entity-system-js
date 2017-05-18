@@ -2,6 +2,7 @@
 
 ## Current
 
+- Rewrote some loops to use `forEach`, and switched `var` to `let` `const`
 - Fixed a scope issue when adding multiple components at once
 - Made component properties enumerable (when the EntityManager is instanciated with a listener)
 - Emit more events: 'entityCreated', 'entityComponentAdded' and 'entityComponentRemoved'

@@ -17,7 +17,7 @@ function clone(obj) {
     // Handle the 3 simple types, and null or undefined
     if (null == obj || 'object' != typeof obj) return obj;
 
-    var copy;
+    let copy;
 
     // Handle Date
     if (obj instanceof Date) {
@@ -29,7 +29,7 @@ function clone(obj) {
     // Handle Array
     if (obj instanceof Array) {
         copy = [];
-        for (var i = 0, len = obj.length; i < len; i++) {
+        for (let i = 0, len = obj.length; i < len; i++) {
             copy[i] = clone(obj[i]);
         }
         return copy;
@@ -38,7 +38,7 @@ function clone(obj) {
     // Handle Object
     if (obj instanceof Object) {
         copy = {};
-        for (var attr in obj) {
+        for (let attr in obj) {
             if (obj.hasOwnProperty(attr)) copy[attr] = clone(obj[attr]);
         }
         return copy;
@@ -161,7 +161,7 @@ class EntityManager {
      */
     removeEntity(id) {
         // Remove all data for this entity.
-        for (var comp in this.entityComponentData) {
+        for (let comp in this.entityComponentData) {
             if (this.entityComponentData.hasOwnProperty(comp)) {
                 if (this.entityComponentData[comp][id]) {
                     delete this.entityComponentData[comp][id];
@@ -225,42 +225,36 @@ class EntityManager {
      * @return {object} - this
      */
     addComponentsToEntity(componentIds, entityId) {
-        var i;
-        var comp;
-        var self = this;
+        const self = this;
 
         // First verify that all the components exist, and throw an error
         // if any is unknown.
-        for (i = componentIds.length - 1; i >= 0; i--) {
-            comp = componentIds[i];
-
+        componentIds.forEach(comp => {
             if (!this.components[comp]) {
                 throw new Error('Trying to use unknown component: ' + comp);
             }
-        }
+        });
 
         // Now we know that this request is correct, let's create the new
         // entity and instanciate the component's states.
-        for (i = componentIds.length - 1; i >= 0; i--) {
-            comp = componentIds[i];
-
+        componentIds.forEach(comp => {
             if (!this.entityComponentData[comp]) {
                 this.entityComponentData[comp] = {};
             }
 
-            var newCompState = null;
+            let newCompState = null;
 
             // If the manager has a listener, we want to create getters
             // and setters so that we can emit state changes. But if it does
             // not have one, there is no need to add the overhead.
-            if (self.listener) {
+            if (this.listener) {
                 newCompState = {};
                 (function (newCompState, comp) {
-                    var state = clone(self.components[comp].state);
+                    let state = clone(self.components[comp].state);
 
                     // Create a setter for each state attribute, so we can emit an
                     // event whenever the state of this component changes.
-                    for (var property in state) {
+                    for (let property in state) {
                         if (state.hasOwnProperty(property)) {
                             (function (property) {
                                 Object.defineProperty(newCompState, property, {
@@ -289,7 +283,7 @@ class EntityManager {
             newCompState.__id = entityId;
 
             this.entityComponentData[comp][entityId] = newCompState;
-        }
+        });
 
         return this;
     }
@@ -302,24 +296,17 @@ class EntityManager {
      * @return {object} - this
      */
     removeComponentsFromEntity(componentIds, entityId) {
-        var i;
-        var comp;
-
         // First verify that all the components exist, and throw an error
         // if any is unknown.
-        for (i = componentIds.length - 1; i >= 0; i--) {
-            comp = componentIds[i];
-
+        componentIds.forEach(comp => {
             if (!this.components[comp]) {
                 throw new Error('Trying to use unknown component: ' + comp);
             }
-        }
+        });
 
-        // Now we know that this request is correct, let's create the new
-        // entity and instanciate the component's states.
-        for (i = componentIds.length - 1; i >= 0; i--) {
-            comp = componentIds[i];
-
+        // Now we know that this request is correct, let's remove all the
+        // components' states for that entity.
+        componentIds.forEach(comp => {
             if (this.entityComponentData[comp]) {
                 if (this.entityComponentData[comp][entityId]) {
                     delete this.entityComponentData[comp][entityId];
@@ -329,7 +316,7 @@ class EntityManager {
                     }
                 }
             }
-        }
+        });
 
 
         return this;
@@ -367,9 +354,9 @@ class EntityManager {
      * @return {object} - this
      */
     updateComponentDataForEntity(componentId, entityId, newState) {
-        var compState = this.getComponentDataForEntity(componentId, entityId);
+        const compState = this.getComponentDataForEntity(componentId, entityId);
 
-        for (var key in newState) {
+        for (let key in newState) {
             if (newState.hasOwnProperty(key) && compState.hasOwnProperty(key)) {
                 compState[key] = newState[key];
             }
@@ -452,12 +439,12 @@ class EntityManager {
             throw new Error('Trying to use unknown assemblage: ' + assemblageId);
         }
 
-        var assemblage = this.assemblages[assemblageId];
-        var entity = this.createEntity(assemblage.components);
+        const assemblage = this.assemblages[assemblageId];
+        const entity = this.createEntity(assemblage.components);
 
-        for (var comp in assemblage.initialState) {
+        for (let comp in assemblage.initialState) {
             if (assemblage.initialState.hasOwnProperty(comp)) {
-                var newState = assemblage.initialState[comp];
+                const newState = assemblage.initialState[comp];
                 this.updateComponentDataForEntity(comp, entity, newState);
             }
         }
@@ -497,9 +484,7 @@ class EntityManager {
      * @return {object} - this
      */
     update(dt) {
-        for (var i = 0; i < this.processors.length; i++) {
-            this.processors[i].update(dt);
-        }
+        this.processors.forEach(processor => processor.update(dt));
         return this;
     }
 }
