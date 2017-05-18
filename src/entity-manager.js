@@ -271,9 +271,6 @@ class EntityManager {
                         }
                     }
                 })(newCompState, comp);
-
-                // Signal the addition of a new component to the entity.
-                self.listener.emit('entityComponentAdded', entityId, comp);
             }
             else {
                 newCompState = clone(self.components[comp].state);
@@ -283,6 +280,11 @@ class EntityManager {
             newCompState.__id = entityId;
 
             this.entityComponentData[comp][entityId] = newCompState;
+
+            if (this.listener) {
+                // Signal the addition of a new component to the entity.
+                this.listener.emit('entityComponentAdded', entityId, comp);
+            }
         });
 
         return this;
