@@ -1,11 +1,12 @@
 /*!
- * ensy - Entity System JavaScript Library v1.2.1
+ * ensy - Entity System JavaScript Library v1.3.0
  *
  * A JavaScript implementation of the Entity System model as described by
  * Adam Martin in http://t-machine.org/index.php/2009/10/26/entity-systems-are-the-future-of-mmos-part-5/
  *
  * @author Adrian Gaudebert - adrian@gaudebert.fr
  * @license MIT license.
+ * @documentation https://entity-system-js.readthedocs.io/
  *
  */
 

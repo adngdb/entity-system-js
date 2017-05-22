@@ -2,6 +2,10 @@
 
 ## Current
 
+
+
+## 1.3.0 (May 22, 2017)
+
 - Fixed a race condition when signaling that a component has been added to an entity.
 - Rewrote some loops to use `forEach`, and switched `var` to `let` `const`.
 - Fixed a scope issue when adding multiple components at once.
