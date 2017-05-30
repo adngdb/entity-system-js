@@ -2,7 +2,7 @@
 
 ## Current
 
-
+- Made `getComponentsData` return an actual array (as documented) instead of an object. [BREAKING]
 
 ## 1.3.0 (May 22, 2017)
 

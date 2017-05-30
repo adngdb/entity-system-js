@@ -383,7 +383,10 @@ class EntityManager {
             return [];
         }
 
-        return this.entityComponentData[componentId];
+        const comps = this.entityComponentData[componentId];
+        // The components are stored as an object where entities are keys, but
+        // we want to return an array.
+        return Object.keys(comps).map(key => comps[key]);
     }
 
     /**
