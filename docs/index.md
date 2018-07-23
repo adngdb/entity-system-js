@@ -38,7 +38,7 @@ const positionComp = {
 manager.addComponent(positionComp.name, positionComp);
 
 let aPosition = manager.createEntity(['Position']);
-let aPositionData = manager.getEntityWithComponent(aPosition, 'Position');
+let aPositionData = manager.getComponentDataForEntity(aPosition, 'Position');
 console.log(aPositionData.x);
 // > 0
 ```
