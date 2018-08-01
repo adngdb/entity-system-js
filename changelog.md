@@ -2,14 +2,16 @@
 
 ## Current
 
-- Made `getComponentsData` return an actual array (as documented) instead of an object. [BREAKING]
+## 1.4.0 (August 1, 2018)
+
+- Made `getComponentsData` return an actual array (as documented) instead of an object. **[BREAKING]**
 
 ## 1.3.0 (May 22, 2017)
 
 - Fixed a race condition when signaling that a component has been added to an entity.
-- Rewrote some loops to use `forEach`, and switched `var` to `let` `const`.
+- Rewrote some loops to use `forEach`, and switched `var` to `let` or `const`.
 - Fixed a scope issue when adding multiple components at once.
-- Made component properties enumerable (when the EntityManager is instanciated with a listener).
+- Made component properties enumerable (when the EntityManager is instantiated with a listener).
 - Emit more events: 'entityCreated', 'entityComponentAdded' and 'entityComponentRemoved'.
 - createEntity now accepts an ID, to make synchronization of distant systems possible.
 - Upgraded libraries rollup and amdefine to their latest versions.
