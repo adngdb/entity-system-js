@@ -98,9 +98,9 @@ function (EntityManager,    PIXI) {
 
     RenderingProcessor.prototype.initTiles = function () {
         var cards = this.manager.getComponentsData('Card');
-        for (var entityId in cards) {
-            this.createCardTile(entityId, cards[entityId]);
-        }
+        cards.forEach(function (card) {
+            this.createCardTile(card.__id, card);
+        }.bind(this));
     };
 
     RenderingProcessor.prototype.createCardTile = function (cardId, cardData) {
@@ -124,22 +124,22 @@ function (EntityManager,    PIXI) {
 
     RenderingProcessor.prototype.update = function () {
         var found = this.manager.getComponentsData('CardFound');
-        for (var entityId in found) {
-            this.container.removeChild(this.sprites[entityId]);
-            this.manager.removeEntity(entityId);
-        }
+        found.forEach(function (card) {
+            this.container.removeChild(this.sprites[card.__id]);
+            this.manager.removeEntity(card.__id);
+        }.bind(this));
 
         var faceDown = this.manager.getComponentsData('CardFaceDown');
-        for (var entityId in faceDown) {
-            this.sprites[entityId].tint = 0x000000;
-            this.sprites[entityId].alpha = 0.5;
-        }
+        faceDown.forEach(function (card) {
+            this.sprites[card.__id].tint = 0x000000;
+            this.sprites[card.__id].alpha = 0.5;
+        }.bind(this));
 
         var faceUp = this.manager.getComponentsData('CardFaceUp');
-        for (var entityId in faceUp) {
-            this.sprites[entityId].tint = 0xffffff;
-            this.sprites[entityId].alpha = 1.0;
-        }
+        faceUp.forEach(function (card) {
+            this.sprites[card.__id].tint = 0xffffff;
+            this.sprites[card.__id].alpha = 1.0;
+        }.bind(this));
 
         renderer.render(stage);
     };
@@ -191,35 +191,32 @@ function (EntityManager,    PIXI) {
         var manager = this.manager;
         var card;
 
-        // Get all the cards currently face up, used in tests because we never
-        // want to have more than 2 cards face up.
-        var faceUp = manager.getComponentsData('CardFaceUp');
-        var faceUpIds = Object.keys(faceUp);
-
         // Go through clicked cards and turn them face up if possible.
         var clicked = manager.getComponentsData('CardClicked');
-        for (card in clicked) {
-            if (Object.keys(faceUp).length < 2 && manager.entityHasComponent(card, 'CardFaceDown')) {
-                manager.removeComponentsFromEntity(['CardFaceDown'], card);
-                manager.addComponentsToEntity(['CardFaceUp'], card);
+        clicked.forEach(function (card) {
+            if (manager.getComponentsData('CardFaceUp').length < 2 && manager.entityHasComponent(card.__id, 'CardFaceDown')) {
+                manager.removeComponentsFromEntity(['CardFaceDown'], card.__id);
+                manager.addComponentsToEntity(['CardFaceUp'], card.__id);
 
-                if (Object.keys(faceUp).length === 2) {
+                if (manager.getComponentsData('CardFaceUp').length === 2) {
                     this.timerStart = +new Date();
                 }
             }
 
-            manager.removeComponentsFromEntity(['CardClicked'], card);
-        }
+            manager.removeComponentsFromEntity(['CardClicked'], card.__id);
+        }.bind(this));
 
-        if (faceUpIds.length > 2) {
+        if (manager.getComponentsData('CardFaceUp').length > 2) {
             throw 'You did your job poorly, developer. Now go and fix your code.';
         }
 
         // When 2 cards are face up and we have waited long enough, if those
         // cards have the same tile, mark them as found, otherwise turn them
         // face down.
-        if (faceUpIds.length == 2 && this.timerStart) {
+        var faceUp = manager.getComponentsData('CardFaceUp');
+        if (faceUp.length === 2 && this.timerStart) {
             var now = +new Date();
+            var faceUpIds = faceUp.map(function (x) { return x.__id; });
             if (now - this.timerStart >= 1000) {
                 var card1 = manager.getComponentDataForEntity('Card', faceUpIds[0]);
                 var card2 = manager.getComponentDataForEntity('Card', faceUpIds[1]);
