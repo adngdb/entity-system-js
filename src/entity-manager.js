@@ -1,5 +1,5 @@
 /*!
- * ensy - Entity System JavaScript Library v1.3.0
+ * ensy - Entity System JavaScript Library v1.4.0
  *
  * A JavaScript implementation of the Entity System model as described by
  * Adam Martin in http://t-machine.org/index.php/2009/10/26/entity-systems-are-the-future-of-mmos-part-5/
@@ -369,10 +369,11 @@ class EntityManager {
     }
 
     /**
-     * Return a list of objects containing the data of all of a given component.
+     * Return a dictionary of objects containing the data of all instances of a
+     * given component.
      *
      * @param {string} componentId - Unique identifier of the component.
-     * @return {array} - List of component data for one component.
+     * @return {Object} - Dictionary of entity id -> component data.
      */
     getComponentsData(componentId) {
         if (!(componentId in this.components)) {
@@ -380,13 +381,10 @@ class EntityManager {
         }
 
         if (!this.entityComponentData.hasOwnProperty(componentId)) {
-            return [];
+            return {};
         }
 
-        const comps = this.entityComponentData[componentId];
-        // The components are stored as an object where entities are keys, but
-        // we want to return an array.
-        return Object.keys(comps).map(key => comps[key]);
+        return this.entityComponentData[componentId];
     }
 
     /**

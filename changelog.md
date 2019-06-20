@@ -2,6 +2,8 @@
 
 ## Current
 
+- Revert `getComponentsData` to return an object (entity => component). **[BREAKING]**
+
 ## 1.4.0 (August 1, 2018)
 
 - Made `getComponentsData` return an actual array (as documented) instead of an object. **[BREAKING]**

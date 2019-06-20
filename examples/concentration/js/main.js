@@ -13,10 +13,10 @@
  */
 
 require.config({
-  paths: {
-    'entity-manager': ['../../../entity-manager'],
-    'lib': './lib'
-  }
+    paths: {
+        'entity-manager': ['../../../entity-manager'],
+        'lib': './lib'
+    }
 });
 
 require(['entity-manager', 'lib/pixi'],
