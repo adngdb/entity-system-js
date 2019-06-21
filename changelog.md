@@ -2,7 +2,9 @@
 
 ## Current
 
-- Revert `getComponentsData` to return an object (entity => component). **[BREAKING]**
+## 1.5.0 (June 21, 2019)
+
+- Revert `getComponentsData` to return an object (entity => component) ([#29](https://github.com/adngdb/entity-system-js/issues/29)). **[BREAKING]**
 
 ## 1.4.0 (August 1, 2018)
 

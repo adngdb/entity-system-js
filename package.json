@@ -1,6 +1,6 @@
 {
   "name": "ensy",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Entity System for JavaScript",
   "homepage": "https://github.com/adngdb/entity-system-js",
   "author": "Adrian Gaudebert <adrian@gaudebert.fr> (http://adrian.gaudebert.fr)",
