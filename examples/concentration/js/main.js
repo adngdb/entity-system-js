@@ -7,7 +7,7 @@
  * but then largely rewritten as an Entity System game.
  *
  * Using:
- *  - Entity System for JavaScript - https://github.com/AdrianGaudebert/entity-system-js
+ *  - ensy - Entity System for JavaScript - https://github.com/adngdb/entity-system-js
  *  - Pixi.js - http://www.pixijs.com/
  *  - require.js - http://requirejs.org/
  */
