@@ -540,14 +540,13 @@ define(function (require) {
                 expect(fn).to.throw('Trying to use unknown component: UnknownComponent');
             });
 
-            it('returns an empty list when the component has no data', function () {
+            it('returns an empty object when the component has no data', function () {
                 var manager = prepareManager();
                 manager.createEntity(['Position']);
 
                 var components = manager.getComponentsData('Unit');
 
-                expect(components).to.be.a('array');
-                expect(components).to.have.length(0);
+                expect(components).to.be.an('object').that.is.empty;
             });
         });
 
