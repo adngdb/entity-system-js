@@ -589,6 +589,18 @@ define(function (require) {
             });
         });
 
+        describe('#addAssemblages()', function () {
+            it('can add a list of assemblages', function () {
+                var manager = new EntityManager();
+
+                var FakeAssemblage = {
+                    name: 'Fake',
+                };
+                manager.addAssemblages([SoldierAssemblage, FakeAssemblage]);
+                expect(Object.keys(manager.assemblages)).to.deep.equal(['Soldier', 'Fake']);
+            });
+        });
+
         describe('#removeAssemblage()', function () {
             it('can remove an existing assemblage', function () {
                 var manager = prepareManager();
@@ -654,6 +666,23 @@ define(function (require) {
                 manager.addProcessor(processor);
 
                 expect(manager.processors).to.have.length(1);
+            });
+        });
+
+        describe('#addProcessors()', function () {
+            it('adds a list of processors', function () {
+                var manager = prepareManager();
+                expect(manager.processors).to.have.length(0);
+
+                var processorA = {
+                    update: function () {},
+                };
+                var processorB = {
+                    update: function () {},
+                };
+                manager.addProcessors([processorA, processorB]);
+
+                expect(manager.processors).to.have.length(2);
             });
         });
 

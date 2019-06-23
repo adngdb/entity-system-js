@@ -199,7 +199,9 @@ class EntityManager {
     /**
      * Add a list of components to known components.
      *
-     * @param {Array} components - Array of objects containing the metadata and data of components. Requires that each object has `name` used to identify it, and `data` to describe it.
+     * @param {Array} components - Array of objects containing the metadata and
+     * data of components. Requires that each object has `name` used to identify
+     * it, and `data` to describe it.
      * @return {object} - this
      */
     addComponents(components) {
@@ -432,6 +434,18 @@ class EntityManager {
     }
 
     /**
+     * Add a list of assemblages to known assemblages.
+     *
+     * @param {Array} assemblages - An array of assemblages to add. Require that
+     * each object has a `name` property to use as identifier.
+     * @return {object} - this
+     */
+    addAssemblages(assemblages) {
+        assemblages.forEach(a => this.assemblages[a.name] = a);
+        return this;
+    }
+
+    /**
      * Remove an assemblage from the list of known assemblages.
      *
      * @param {string} id - Unique identifier of the assemblage.
@@ -478,6 +492,17 @@ class EntityManager {
      */
     addProcessor(processor) {
         this.processors.push(processor);
+        return this;
+    }
+
+    /**
+     * Add a list of processors to known processors.
+     *
+     * @param {Array} processors - An array of processors to manage.
+     * @return {object} - this
+     */
+    addProcessors(processors) {
+        processors.forEach(processor => this.processors.push(processor));
         return this;
     }
 

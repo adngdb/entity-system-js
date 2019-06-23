@@ -2,6 +2,7 @@
 
 ## Current
 
+- Add `addProcessors` and `addAssemblages` methods to add lists of elements (#32)[https://github.com/adngdb/entity-system-js/issues/32].
 - Add an `addComponents` method to add a list of components at once (#31)[https://github.com/adngdb/entity-system-js/issues/31].
 
 ## 1.5.0 (June 21, 2019)

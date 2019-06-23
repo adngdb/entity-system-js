@@ -59,7 +59,8 @@ Add a list of components to known components.
 
 ### Params:
 
-* **Array** *components* - Array of objects containing the metadata and data of components. Requires that each object has `name` used to identify it, and `data` to describe it.
+* **Array** *components* - Array of objects containing the metadata and data of components. Requires that each object has `name` used to identify
+it, and `data` to describe it.
 
 ### Return:
 
@@ -179,6 +180,18 @@ Add an assemblage to the list of known assemblages.
 
 * **object** - this
 
+## addAssemblages(assemblages)
+
+Add a list of assemblages to known assemblages.
+
+### Params:
+
+* **Array** *assemblages* - An array of assemblages to add. Require that each object has a `name` property to use as identifier.
+
+### Return:
+
+* **object** - this
+
 ## removeAssemblage(id)
 
 Remove an assemblage from the list of known assemblages.
@@ -211,6 +224,18 @@ Add a processor to the list of known processors.
 ### Params:
 
 * **object** *processor* - An instance of a processor to manage.
+
+### Return:
+
+* **object** - this
+
+## addProcessors(processors)
+
+Add a list of processors to known processors.
+
+### Params:
+
+* **Array** *processors* - An array of processors to manage.
 
 ### Return:
 
