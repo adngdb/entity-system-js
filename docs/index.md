@@ -56,9 +56,9 @@ const MyProcessor = function (manager) {
 };
 
 MyProcessor.prototype.update = function (dt) {
-    let entities = this.manager.getEntitiesWithComponent('MyComponent');
+    let entities = this.manager.getComponentsData('MyComponent');
 
-    // Do something on those entities...
+    // Do something on these entities…
 };
 
 manager.addProcessor(new MyProcessor(manager));
