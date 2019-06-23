@@ -177,6 +177,15 @@ define(function (require) {
             });
         });
 
+        describe('#addComponents()', function () {
+            it('can add a list of components at once', function () {
+                var manager = new EntityManager();
+
+                manager.addComponents([PositionComponent, UnitComponent]);
+                expect(manager.getComponentsList()).to.deep.equal(['Position', 'Unit']);
+            });
+        });
+
         describe('#removeComponent()', function () {
             it('can remove an existing component', function () {
                 var manager = prepareManager();

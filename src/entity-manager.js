@@ -197,6 +197,17 @@ class EntityManager {
     }
 
     /**
+     * Add a list of components to known components.
+     *
+     * @param {Array} components - Array of objects containing the metadata and data of components. Requires that each object has `name` used to identify it, and `data` to describe it.
+     * @return {object} - this
+     */
+    addComponents(components) {
+        components.forEach(comp => this.addComponent(comp.name, comp));
+        return this;
+    }
+
+    /**
      * Remove a component from the list of known components.
      *
      * @param {string} id - Unique identifier of the component.

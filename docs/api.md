@@ -53,6 +53,18 @@ Add a component to the list of known components.
 
 * **object** - this
 
+## addComponents(components)
+
+Add a list of components to known components.
+
+### Params:
+
+* **Array** *components* - Array of objects containing the metadata and data of components. Requires that each object has `name` used to identify it, and `data` to describe it.
+
+### Return:
+
+* **object** - this
+
 ## removeComponent(id)
 
 Remove a component from the list of known components.
@@ -130,7 +142,8 @@ Update the state of a component, many keys at once.
 
 ## getComponentsData(componentId)
 
-Return a list of objects containing the data of all of a given component.
+Return a dictionary of objects containing the data of all instances of a
+given component.
 
 ### Params:
 
@@ -138,7 +151,7 @@ Return a list of objects containing the data of all of a given component.
 
 ### Return:
 
-* **array** - List of component data for one component.
+* **Object** - Dictionary of entity id -> component data.
 
 ## entityHasComponent(entityId, componentId)
 
