@@ -1,2 +1,3 @@
 site_name: Entity System Docs
 theme: readthedocs
+docs_dir: docs
