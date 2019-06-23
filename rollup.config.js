@@ -1,21 +1,19 @@
 import babel from 'rollup-plugin-babel';
-import uglify from 'rollup-plugin-uglify';
+import { terser } from 'rollup-plugin-terser';
 
 
 export default {
-    entry: 'src/entity-manager.js',
-    targets: [
-        {
-            dest: 'entity-manager.js',
-            format: 'umd',
-            moduleName: 'ensy',
-        },
-    ],
-    sourceMap: 'inline',
+    input: 'src/entity-manager.js',
+    output: {
+        file: 'entity-manager.js',
+        format: 'umd',
+        name: 'ensy',
+        sourcemap: true,
+    },
     plugins: [
         babel({
             exclude: 'node_modules/**',
         }),
-        uglify({}),
+        terser(),
     ],
 };
