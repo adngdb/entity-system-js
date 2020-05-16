@@ -175,7 +175,7 @@ class EntityManager {
 
         if (this.listener) {
             // Signal the removal of an entity.
-            this.listener.emit('entityCreated', id);
+            this.listener.emit('entityRemoved', id);
         }
 
         return this;
