@@ -256,7 +256,7 @@ class EntityManager {
                 this.entityComponentData[comp] = {};
             }
 
-            let newCompState = null;
+            let newCompState = clone(self.components[comp].state);
 
             // If the manager has a listener, we want to create getters
             // and setters so that we can emit state changes. But if it does
@@ -285,9 +285,6 @@ class EntityManager {
                         }
                     }
                 })(newCompState, comp);
-            }
-            else {
-                newCompState = clone(self.components[comp].state);
             }
 
             // Store the entity's ID so it's easier to find other components for that entity.
