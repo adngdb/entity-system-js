@@ -15,16 +15,16 @@
   "main": "entity-manager.js",
   "dependencies": {},
   "devDependencies": {
-    "@babel/core": "7.4.5",
-    "@babel/preset-env": "7.4.5",
+    "@babel/core": "7.9.6",
+    "@babel/preset-env": "7.9.6",
     "amdefine": "1.0.1",
     "benchmark": "2.1.4",
     "chai": "4.2.0",
     "markdox": "0.1.10",
-    "mocha": "6.1.4",
+    "mocha": "7.1.2",
     "rollup": "1.16.2",
     "rollup-plugin-babel": "4.3.3",
-    "rollup-plugin-terser": "5.0.0"
+    "rollup-plugin-terser": "^5.3.0"
   },
   "scripts": {
     "test": "mocha `find test -name 'test_*.js'` --reporter spec",
