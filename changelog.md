@@ -1,9 +1,13 @@
-# Master
+# Changelog
 
 ## Current
 
+## 1.5.1 (May 16, 2020)
+
 - Add `addProcessors` and `addAssemblages` methods to add lists of elements (#32)[https://github.com/adngdb/entity-system-js/issues/32].
 - Add an `addComponents` method to add a list of components at once (#31)[https://github.com/adngdb/entity-system-js/issues/31].
+- Fix event emitting when removing an entity.
+- Upgrade some dependencies.
 
 ## 1.5.0 (June 21, 2019)
 
