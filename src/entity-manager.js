@@ -301,6 +301,18 @@ class EntityManager {
             }
         });
 
+        componentIds.forEach(comp => {
+            this.processors.forEach(processor => {
+                if ('on' in processor && typeof processor.on === 'function') {
+                    processor.on('COMPONENT_CREATED', {
+                        entity: entityId,
+                        component: comp,
+                        state: this.entityComponentData[comp][entityId]
+                    });
+                }
+            });
+        });
+
         return this;
     }
 
