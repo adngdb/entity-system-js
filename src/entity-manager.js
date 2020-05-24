@@ -301,16 +301,8 @@ class EntityManager {
             }
         });
 
-        componentIds.forEach(comp => {
-            this.processors.forEach(processor => {
-                if ('on' in processor && typeof processor.on === 'function') {
-                    processor.on('COMPONENT_CREATED', {
-                        entity: entityId,
-                        component: comp,
-                        state: this.entityComponentData[comp][entityId]
-                    });
-                }
-            });
+        componentIds.forEach(componentId => {
+            this.sendEventToProcessors('COMPONENT_CREATED', entityId, componentId);
         });
 
         return this;
@@ -389,6 +381,8 @@ class EntityManager {
                 compState[key] = newState[key];
             }
         }
+
+        this.sendEventToProcessors('COMPONENT_UPDATED', entityId, componentId);
 
         return this;
     }
@@ -527,6 +521,26 @@ class EntityManager {
     removeProcessor(processor) {
         this.processors.splice(this.processors.indexOf(processor), 1);
         return this;
+    }
+
+    /**
+     * Send an event to the list of known processors.
+     *
+     * @param {string} eventName - Id of the event to send.
+     * @param {number} entityId - Unique identifier of the entity on which the event occured.
+     * @param {string} componentId - Unique identifier of the component on which the event occured.
+     * @return {object} - this
+     */
+    sendEventToProcessors(eventName, entityId, componentId) {
+        this.processors.forEach(processor => {
+            if ('on' in processor && typeof processor.on === 'function') {
+                processor.on(eventName, {
+                    entity: entityId,
+                    component: componentId,
+                    state: this.entityComponentData[componentId][entityId]
+                });
+            }
+        });
     }
 
     /**
