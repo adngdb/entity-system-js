@@ -107,13 +107,13 @@ define(function (require) {
                 expect(manager.entityHasComponent(entity, 'Unit')).to.be.true;
             });
 
-            it('create event is raised from the manager to the processor', function () {
+            it('sends the create event from manager to processors', function () {
                 var manager = prepareManager();
                 var newEntityId = 42;
 
                 var processor = {
                     entities: [],
-                    on(type, data) {
+                    on: function (type, data) {
                         switch (type) {
                             case 'COMPONENT_CREATED':
                                 this.entities.push(data.entity);
@@ -134,13 +134,13 @@ define(function (require) {
                 expect(manager.processors[0].entities[0]).to.equal(newEntityId);
             });
 
-            it('update event is raised from the manager to the processor', function () {
+            it('sends the update event from manager to processors', function () {
                 var manager = prepareManager();
                 var newEntityId = 42;
 
                 var processor = {
                     entities: [],
-                    on(type, data) {
+                    on: function (type, data) {
                         switch (type) {
                             case 'COMPONENT_UPDATED':
                                 this.entities.push(data.entity);
