@@ -49,6 +49,22 @@ define(function (require) {
                 expect(data.attack).to.be.undefined;
             });
 
+            it('can create a new single-component entity with an initial state', function () {
+                var manager = prepareManager();
+
+                var entity = manager.createEntity(['Position'], undefined, {Position: {
+                    x: 1,
+                    z: 3
+                }});
+                var data = manager.getComponentDataForEntity('Position', entity);
+
+                // Testing default values
+                expect(data.x).to.equal(1);
+                expect(data.y).to.equal(0);
+                expect(data.z).to.equal(3);
+                expect(data.attack).to.be.undefined;
+            });
+
             it('can create a new entity with several components', function () {
                 var manager = prepareManager();
 

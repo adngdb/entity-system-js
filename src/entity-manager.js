@@ -134,7 +134,7 @@ class EntityManager {
      * @param {int} entityId - Optional. Unique identifier of the entity. If passed, no new id will be generated.
      * @return {int} - Unique identifier of the new entity.
      */
-    createEntity(componentIds, entityId) {
+    createEntity(componentIds, entityId, initialState) {
         if (typeof entityId === 'undefined' || entityId === null) {
             entityId = this.getUid();
         }
@@ -143,7 +143,7 @@ class EntityManager {
             this.uid = entityId;
         }
 
-        this.addComponentsToEntity(componentIds, entityId);
+        this.addComponentsToEntity(componentIds, entityId, initialState);
         if (!this.entities.includes(entityId)) {
             this.entities.push(entityId);
         }
@@ -238,7 +238,7 @@ class EntityManager {
      * @param {int} entityId - Unique identifier of the entity.
      * @return {object} - this
      */
-    addComponentsToEntity(componentIds, entityId) {
+    addComponentsToEntity(componentIds, entityId, initialState) {
         const self = this;
 
         // First verify that all the components exist, and throw an error
@@ -300,6 +300,15 @@ class EntityManager {
                 this.listener.emit('entityComponentAdded', entityId, comp);
             }
         });
+
+        if (initialState) {
+            for (let componentId in initialState) {
+                if (initialState.hasOwnProperty(componentId)) {
+                    const newState = initialState[componentId];
+                    this.updateComponentDataForEntity(componentId, entityId, newState);
+                }
+            }
+        }
 
         componentIds.forEach(componentId => {
             this.sendEventToProcessors('COMPONENT_CREATED', entityId, componentId);
@@ -475,14 +484,7 @@ class EntityManager {
         }
 
         const assemblage = this.assemblages[assemblageId];
-        const entity = this.createEntity(assemblage.components);
-
-        for (let comp in assemblage.initialState) {
-            if (assemblage.initialState.hasOwnProperty(comp)) {
-                const newState = assemblage.initialState[comp];
-                this.updateComponentDataForEntity(comp, entity, newState);
-            }
-        }
+        const entity = this.createEntity(assemblage.components, undefined, assemblage.initialState);
 
         return entity;
     }
