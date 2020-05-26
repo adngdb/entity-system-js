@@ -253,6 +253,20 @@ Remove a processor from the list of known processors.
 
 * **object** - this
 
+## sendEventToProcessors(eventName, entityId, componentId)
+
+Send an event to the list of known processors.
+
+### Params:
+
+* **string** *eventName* - Id of the event to send.
+* **number** *entityId* - Unique identifier of the entity on which the event occured.
+* **string** *componentId* - Unique identifier of the component on which the event occured.
+
+### Return:
+
+* **object** - this
+
 ## update(dt)
 
 Update all the known processors.
