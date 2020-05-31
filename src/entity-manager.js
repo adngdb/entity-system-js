@@ -127,11 +127,11 @@ class EntityManager {
     // ENTITIES
 
     /**
-     * Create a new entity in the system by creating a new instance of each of
-     * its components.
+     * Create a new entity in the system by creating a new instance of each of its components.
      *
      * @param {array} componentIds - List of identifiers of the components that compose the new entity.
      * @param {int} entityId - Optional. Unique identifier of the entity. If passed, no new id will be generated.
+     * @param {object} initialState - Optional. Object containing the initial state to apply.
      * @return {int} - Unique identifier of the new entity.
      */
     createEntity(componentIds, entityId, initialState) {
@@ -231,11 +231,11 @@ class EntityManager {
     }
 
     /**
-     * Create a new instance of each listed component and associate them
-     * with the entity.
+     * Create a new instance of each listed component and associate them with the entity.
      *
      * @param {array} componentIds - List of identifiers of the components to add to the entity.
      * @param {int} entityId - Unique identifier of the entity.
+     * @param {object} initialState - Optional. Object containing the initial state to apply.
      * @return {object} - this
      */
     addComponentsToEntity(componentIds, entityId, initialState) {
@@ -305,7 +305,7 @@ class EntityManager {
             for (let componentId in initialState) {
                 if (initialState.hasOwnProperty(componentId)) {
                     const newState = initialState[componentId];
-                    this.updateComponentDataForEntity(componentId, entityId, newState);
+                    this.updateComponentDataForEntity(componentId, entityId, newState, false);
                 }
             }
         }
@@ -380,9 +380,10 @@ class EntityManager {
      * @param {int} entityId - Unique identifier of the entity.
      * @param {string} componentId - Unique identifier of the component.
      * @param {object} newState - Object containing the new state to apply.
+     * @param {boolean} sendUpdateEvent - Optional. True if the method has to send the `COMPONENT_UPDATED` event.
      * @return {object} - this
      */
-    updateComponentDataForEntity(componentId, entityId, newState) {
+    updateComponentDataForEntity(componentId, entityId, newState, sendUpdateEvent = true) {
         const compState = this.getComponentDataForEntity(componentId, entityId);
 
         for (let key in newState) {
@@ -391,7 +392,9 @@ class EntityManager {
             }
         }
 
-        this.sendEventToProcessors('COMPONENT_UPDATED', entityId, componentId);
+        if (sendUpdateEvent) {
+            this.sendEventToProcessors('COMPONENT_UPDATED', entityId, componentId);
+        }
 
         return this;
     }

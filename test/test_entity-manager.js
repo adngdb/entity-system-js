@@ -182,6 +182,36 @@ define(function (require) {
                 expect(manager.processors[0].entities).to.have.length(1);
                 expect(manager.processors[0].entities[0]).to.equal(newEntityId);
             });
+
+            it('does not sends the update event from manager to processors', function () {
+                var manager = prepareManager();
+                var newEntityId = 42;
+
+                var processor = {
+                    entities: [],
+                    on: function (type, data) {
+                        switch (type) {
+                            case 'COMPONENT_UPDATED':
+                                this.entities.push(data.entity);
+                                break;
+                            default:
+                                break;
+                        }
+                    },
+                    update: function () {},
+                };
+                manager.addProcessor(processor);
+
+                var entity = manager.createEntity(['Position'], newEntityId);
+
+                expect(manager.processors).to.have.length(1);
+                expect(manager.processors[0]).to.equal(processor);
+                expect(manager.processors[0].entities).to.have.length(0);
+
+                manager.updateComponentDataForEntity('Position', entity, {x: 12}, false);
+
+                expect(manager.processors[0].entities).to.have.length(0);
+            });
         });
 
         describe('#removeEntity()', function () {
