@@ -212,6 +212,40 @@ define(function (require) {
 
                 expect(manager.processors[0].entities).to.have.length(0);
             });
+
+            it('does not sends the update event from manager to processors when creating an entity with inital state', function () {
+                var manager = prepareManager();
+                var newEntityId = 42;
+
+                var processor = {
+                    entities: [],
+                    on: function (type, data) {
+                        switch (type) {
+                            case 'COMPONENT_UPDATED':
+                                this.entities.push(data.entity);
+                                break;
+                            default:
+                                break;
+                        }
+                    },
+                    update: function () {},
+                };
+                manager.addProcessor(processor);
+
+                var entity = manager.createEntity(['Position'], newEntityId, {Position: {
+                    x: 1,
+                    z: 3
+                }});
+
+                var data = manager.getComponentDataForEntity('Position', entity);
+
+                // Testing default values
+                expect(data.x).to.equal(1);
+                expect(data.z).to.equal(3);
+                expect(manager.processors).to.have.length(1);
+                expect(manager.processors[0]).to.equal(processor);
+                expect(manager.processors[0].entities).to.have.length(0);
+            });
         });
 
         describe('#removeEntity()', function () {
