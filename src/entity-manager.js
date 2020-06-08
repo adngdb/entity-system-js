@@ -127,11 +127,11 @@ class EntityManager {
     // ENTITIES
 
     /**
-     * Create a new entity in the system by creating a new instance of each of
-     * its components.
+     * Create a new entity in the system by creating a new instance of each of its components.
      *
      * @param {array} componentIds - List of identifiers of the components that compose the new entity.
      * @param {int} entityId - Optional. Unique identifier of the entity. If passed, no new id will be generated.
+     * @param {object} initialState - Optional. Object containing the initial state to apply.
      * @return {int} - Unique identifier of the new entity.
      */
     createEntity(componentIds, entityId, initialState) {
@@ -231,11 +231,11 @@ class EntityManager {
     }
 
     /**
-     * Create a new instance of each listed component and associate them
-     * with the entity.
+     * Create a new instance of each listed component and associate them with the entity.
      *
      * @param {array} componentIds - List of identifiers of the components to add to the entity.
      * @param {int} entityId - Unique identifier of the entity.
+     * @param {object} initialState - Optional. Object containing the initial state to apply.
      * @return {object} - this
      */
     addComponentsToEntity(componentIds, entityId, initialState) {
@@ -305,10 +305,14 @@ class EntityManager {
             for (let componentId in initialState) {
                 if (initialState.hasOwnProperty(componentId)) {
                     const newState = initialState[componentId];
-                    this.updateComponentDataForEntity(componentId, entityId, newState);
+                    this.updateComponentDataForEntity(componentId, entityId, newState, false);
                 }
             }
         }
+
+        componentIds.forEach(componentId => {
+            this.sendEventToProcessors('COMPONENT_CREATED', entityId, componentId);
+        });
 
         return this;
     }
@@ -376,15 +380,20 @@ class EntityManager {
      * @param {int} entityId - Unique identifier of the entity.
      * @param {string} componentId - Unique identifier of the component.
      * @param {object} newState - Object containing the new state to apply.
+     * @param {boolean} sendUpdateEvent - Optional. True if the method has to send the `COMPONENT_UPDATED` event.
      * @return {object} - this
      */
-    updateComponentDataForEntity(componentId, entityId, newState) {
+    updateComponentDataForEntity(componentId, entityId, newState, sendUpdateEvent = true) {
         const compState = this.getComponentDataForEntity(componentId, entityId);
 
         for (let key in newState) {
             if (newState.hasOwnProperty(key) && compState.hasOwnProperty(key)) {
                 compState[key] = newState[key];
             }
+        }
+
+        if (sendUpdateEvent) {
+            this.sendEventToProcessors('COMPONENT_UPDATED', entityId, componentId);
         }
 
         return this;
@@ -517,6 +526,26 @@ class EntityManager {
     removeProcessor(processor) {
         this.processors.splice(this.processors.indexOf(processor), 1);
         return this;
+    }
+
+    /**
+     * Send an event to the list of known processors.
+     *
+     * @param {string} eventName - Id of the event to send.
+     * @param {number} entityId - Unique identifier of the entity on which the event occured.
+     * @param {string} componentId - Unique identifier of the component on which the event occured.
+     * @return {object} - this
+     */
+    sendEventToProcessors(eventName, entityId, componentId) {
+        this.processors.forEach(processor => {
+            if ('on' in processor && typeof processor.on === 'function') {
+                processor.on(eventName, {
+                    entity: entityId,
+                    component: componentId,
+                    state: this.entityComponentData[componentId][entityId]
+                });
+            }
+        });
     }
 
     /**

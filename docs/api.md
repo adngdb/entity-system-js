@@ -14,15 +14,15 @@ Return an identifier unique to this system.
 
 * **int** - Unique identifier.
 
-## createEntity(componentIds, entityId)
+## createEntity(componentIds, entityId, initialState)
 
-Create a new entity in the system by creating a new instance of each of
-its components.
+Create a new entity in the system by creating a new instance of each of its components.
 
 ### Params:
 
 * **array** *componentIds* - List of identifiers of the components that compose the new entity.
 * **int** *entityId* - Optional. Unique identifier of the entity. If passed, no new id will be generated.
+* **object** *initialState* - Optional. Object containing the initial state to apply.
 
 ### Return:
 
@@ -86,15 +86,15 @@ Get the list of components this instance knows.
 
 * **array** - List of names of components.
 
-## addComponentsToEntity(componentIds, entityId)
+## addComponentsToEntity(componentIds, entityId, initialState)
 
-Create a new instance of each listed component and associate them
-with the entity.
+Create a new instance of each listed component and associate them with the entity.
 
 ### Params:
 
 * **array** *componentIds* - List of identifiers of the components to add to the entity.
 * **int** *entityId* - Unique identifier of the entity.
+* **object** *initialState* - Optional. Object containing the initial state to apply.
 
 ### Return:
 
@@ -127,7 +127,7 @@ instanciated component of an entity.
 
 * **object** - Component data of one entity.
 
-## updateComponentDataForEntity(entityId, componentId, newState)
+## updateComponentDataForEntity(entityId, componentId, newState, sendUpdateEvent)
 
 Update the state of a component, many keys at once.
 
@@ -136,6 +136,7 @@ Update the state of a component, many keys at once.
 * **int** *entityId* - Unique identifier of the entity.
 * **string** *componentId* - Unique identifier of the component.
 * **object** *newState* - Object containing the new state to apply.
+* **boolean** *sendUpdateEvent* - Optional. True if the method has to send the `COMPONENT_UPDATED` event.
 
 ### Return:
 
@@ -248,6 +249,20 @@ Remove a processor from the list of known processors.
 ### Params:
 
 * **object** *processor* - An instance of a processor to remove.
+
+### Return:
+
+* **object** - this
+
+## sendEventToProcessors(eventName, entityId, componentId)
+
+Send an event to the list of known processors.
+
+### Params:
+
+* **string** *eventName* - Id of the event to send.
+* **number** *entityId* - Unique identifier of the entity on which the event occured.
+* **string** *componentId* - Unique identifier of the component on which the event occured.
 
 ### Return:
 
