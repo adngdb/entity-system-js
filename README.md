@@ -9,7 +9,7 @@ in his blog post series [Entity Systems are the future of MMOs](http://t-machine
 
 ## Installation
 
-This module is available on [``npm``](http://npmjs.com/package/ensy) and [``bower``](http://bower.io) as ``ensy``. It has no dependencies.
+This module is available on [``npm``](http://npmjs.com/package/ensy) as ``ensy``. It has no dependencies.
 
 ``npm install --save ensy``
 
@@ -33,15 +33,22 @@ const PlayerComponent = {
 manager.addComponent(PlayerComponent.name, PlayerComponent);
 
 // Create a new entity.
-var playerId = manager.createEntity(['Player']);
+const playerId = manager.createEntity(['Player']);
 
 // Update the player's state:
-var playerData = manager.getComponentDataForEntity('Player', playerId);
+let playerData = manager.getComponentDataForEntity('Player', playerId);
 playerData.life = 80;
 
 // Which is equivalent to:
 manager.updateComponentDataForEntity('Player', playerId, {
     life: 80,
+});
+
+// Which can also be done when creating the entity:
+const playerId = manager.createEntity(['Player'], null, {
+    Player: {
+        life: 80,
+    },
 });
 
 console.log(playerData);

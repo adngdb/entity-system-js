@@ -2,10 +2,15 @@
 
 ## Current
 
+## 1.5.2 (June 16, 2020)
+
+- Send events to processors ([#37](https://github.com/adngdb/entity-system-js/issues/37))
+- Add support for initial state when creating entities ([#38](https://github.com/adngdb/entity-system-js/issues/38))
+
 ## 1.5.1 (May 16, 2020)
 
-- Add `addProcessors` and `addAssemblages` methods to add lists of elements (#32)[https://github.com/adngdb/entity-system-js/issues/32].
-- Add an `addComponents` method to add a list of components at once (#31)[https://github.com/adngdb/entity-system-js/issues/31].
+- Add `addProcessors` and `addAssemblages` methods to add lists of elements ([#32](https://github.com/adngdb/entity-system-js/issues/32)).
+- Add an `addComponents` method to add a list of components at once ([#31](https://github.com/adngdb/entity-system-js/issues/31)).
 - Fix event emitting when removing an entity.
 - Upgrade some dependencies.
 
